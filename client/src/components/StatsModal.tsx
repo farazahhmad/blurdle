@@ -32,8 +32,8 @@ export function StatsModal({ stats, onClose }: StatsModalProps) {
   const statBoxes = [
     { label: 'Played', value: stats.gamesPlayed },
     { label: 'Win %', value: `${winPct}%` },
-    { label: 'Current Streak', value: stats.currentStreak },
-    { label: 'Max Streak', value: stats.maxStreak },
+    { label: 'Streak', value: stats.currentStreak },
+    { label: 'Best', value: stats.maxStreak },
   ];
 
   return (
@@ -56,35 +56,35 @@ export function StatsModal({ stats, onClose }: StatsModalProps) {
         tabIndex={-1}
         className="
           relative z-10 w-full max-w-sm
-          bg-cinema-darker border border-white/10 rounded-2xl
-          shadow-2xl overflow-hidden animate-slide-up
-          focus:outline-none
+          card p-6 overflow-hidden animate-slide-up
+          focus:outline-none flex flex-col gap-5
         "
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+        {/* Header & Tabs */}
+        <div className="flex items-center justify-between border-b border-border pb-3.5">
           <div className="flex items-center gap-3">
-            <h2 className="text-lg font-bold uppercase tracking-widest text-cinema-light">
+            <h2 className="text-sm font-semibold tracking-tight text-text-primary">
               Statistics
             </h2>
-            {/* Tabs */}
-            <div className="flex bg-cinema-gray/40 rounded-lg p-0.5 border border-white/5 text-xs">
+
+            {/* Pill Tabs */}
+            <div className="flex bg-surface-raised rounded-full p-0.5 border border-border text-xs font-mono">
               <button
                 onClick={() => setActiveTab('daily')}
-                className={`px-2.5 py-1 rounded-md transition-all ${
+                className={`px-2.5 py-0.5 rounded-full transition-colors ${
                   activeTab === 'daily'
-                    ? 'bg-cinema-accent text-cinema-darker font-bold'
-                    : 'text-cinema-light/60 hover:text-cinema-light'
+                    ? 'bg-accent text-[#16110e] font-semibold'
+                    : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 Daily
               </button>
               <button
                 onClick={() => setActiveTab('overall')}
-                className={`px-2.5 py-1 rounded-md transition-all ${
+                className={`px-2.5 py-0.5 rounded-full transition-colors ${
                   activeTab === 'overall'
-                    ? 'bg-cinema-accent text-cinema-darker font-bold'
-                    : 'text-cinema-light/60 hover:text-cinema-light'
+                    ? 'bg-accent text-[#16110e] font-semibold'
+                    : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 Overall
@@ -94,109 +94,94 @@ export function StatsModal({ stats, onClose }: StatsModalProps) {
 
           <button
             onClick={onClose}
-            className="
-              p-2 rounded-lg text-cinema-light/40 hover:text-cinema-light
-              hover:bg-cinema-gray/60 transition-colors
-              focus:outline-none focus:ring-2 focus:ring-cinema-accent/40
-            "
-            aria-label="Close statistics"
+            className="text-text-tertiary hover:text-text-primary p-1 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            aria-label="Close"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="p-6 flex flex-col gap-6">
-          {activeTab === 'daily' ? (
-            <>
-              {/* Stat boxes */}
-              <div className="grid grid-cols-4 gap-2 text-center">
-                {statBoxes.map(({ label, value }) => (
-                  <div
-                    key={label}
-                    className="bg-cinema-gray/60 rounded-xl p-3 border border-white/5 flex flex-col items-center"
-                  >
-                    <p className="text-cinema-accent font-bold text-2xl leading-tight tabular-nums">
-                      {value}
-                    </p>
-                    <p className="text-cinema-light/40 text-[10px] mt-1 leading-tight text-center">
-                      {label}
-                    </p>
-                  </div>
-                ))}
-              </div>
+        {/* Content */}
+        {activeTab === 'daily' ? (
+          <>
+            {/* Stat boxes */}
+            <div className="grid grid-cols-4 gap-2 font-mono">
+              {statBoxes.map(({ label, value }) => (
+                <div
+                  key={label}
+                  className="bg-surface-raised rounded-tile p-2.5 border border-border text-center"
+                >
+                  <p className="text-text-primary font-semibold text-lg leading-tight tabular-nums">
+                    {value}
+                  </p>
+                  <p className="text-text-tertiary text-[10px] uppercase tracking-wider mt-1">
+                    {label}
+                  </p>
+                </div>
+              ))}
+            </div>
 
-              {/* Guess distribution */}
-              <div>
-                <h3 className="text-xs font-semibold uppercase tracking-widest text-cinema-light/40 mb-3">
-                  Guess Distribution
-                </h3>
-                <div className="flex flex-col gap-2">
-                  {stats.guessDistribution.map((count, idx) => {
-                    const pct = maxDist > 0 ? Math.round((count / maxDist) * 100) : 0;
-                    const isMax = count === maxDist && count > 0;
+            {/* Guess distribution */}
+            <div className="flex flex-col gap-2.5">
+              <h3 className="font-mono text-xs uppercase tracking-mono-caps text-text-tertiary">
+                Guess Distribution
+              </h3>
+              <div className="flex flex-col gap-2 font-mono text-xs">
+                {stats.guessDistribution.map((count, idx) => {
+                  const pct = maxDist > 0 ? Math.round((count / maxDist) * 100) : 0;
+                  const isMax = count === maxDist && count > 0;
 
-                    return (
-                      <div key={idx} className="flex items-center gap-2">
-                        <span className="text-cinema-light/50 text-sm w-4 text-right font-medium tabular-nums">
-                          {idx + 1}
-                        </span>
-                        <div className="flex-1 h-7 bg-cinema-gray/40 rounded-md overflow-hidden">
-                          <div
-                            className={`
-                              h-full flex items-center px-2 rounded-md transition-all duration-700
-                              ${isMax ? 'bg-cinema-accent' : 'bg-cinema-gray'}
-                            `}
-                            style={{ width: `${Math.max(pct, count > 0 ? 8 : 0)}%` }}
-                          >
-                            {count > 0 && (
-                              <span
-                                className={`
-                                  text-xs font-bold ml-auto
-                                  ${isMax ? 'text-cinema-darker' : 'text-cinema-light/70'}
-                                `}
-                              >
-                                {count}
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                  return (
+                    <div key={idx} className="flex items-center gap-3">
+                      <span className="text-text-tertiary w-3 text-right tabular-nums">
+                        {idx + 1}
+                      </span>
+                      {/* Thin solid white/gray bar, no gradient */}
+                      <div className="flex-1 h-2 bg-surface-raised rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            isMax ? 'bg-accent shadow-[0_0_6px_rgba(255,200,61,0.5)]' : 'bg-text-tertiary/40'
+                          }`}
+                          style={{ width: `${Math.max(pct, count > 0 ? 6 : 0)}%` }}
+                        />
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="flex flex-col gap-4">
-              <div className="bg-cinema-gray/40 rounded-xl p-4 border border-white/5 flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-cinema-light/70">Total Games Played</span>
-                  <span className="text-lg font-bold text-cinema-light tabular-nums">{stats.gamesPlayed}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-cinema-light/70">Daily Games</span>
-                  <span className="text-lg font-bold text-cinema-accent tabular-nums">
-                    {stats.dailyGames !== undefined ? stats.dailyGames : stats.gamesPlayed}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-cinema-light/70">Archive Games</span>
-                  <span className="text-lg font-bold text-cinema-light/90 tabular-nums">
-                    {stats.archiveGames !== undefined ? stats.archiveGames : 0}
-                  </span>
-                </div>
-                <div className="border-t border-white/5 pt-2 flex items-center justify-between">
-                  <span className="text-sm text-cinema-light/70">Avg Guesses per Win</span>
-                  <span className="text-lg font-bold text-cinema-accent tabular-nums">
-                    {stats.averageGuessesPerWin !== undefined ? stats.averageGuessesPerWin : '-'}
-                  </span>
-                </div>
+                      <span className="text-text-secondary w-5 text-right tabular-nums">
+                        {count}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-          )}
-        </div>
+          </>
+        ) : (
+          <div className="card bg-surface-raised p-4 divide-y divide-border font-mono text-xs">
+            <div className="py-2.5 flex items-center justify-between first:pt-0">
+              <span className="text-text-secondary">Total Games Played</span>
+              <span className="text-text-primary font-medium tabular-nums">{stats.gamesPlayed}</span>
+            </div>
+            <div className="py-2.5 flex items-center justify-between">
+              <span className="text-text-secondary">Daily Games</span>
+              <span className="text-text-primary font-medium tabular-nums">
+                {stats.dailyGames !== undefined ? stats.dailyGames : stats.gamesPlayed}
+              </span>
+            </div>
+            <div className="py-2.5 flex items-center justify-between">
+              <span className="text-text-secondary">Archive Games</span>
+              <span className="text-text-primary font-medium tabular-nums">
+                {stats.archiveGames !== undefined ? stats.archiveGames : 0}
+              </span>
+            </div>
+            <div className="py-2.5 flex items-center justify-between last:pb-0">
+              <span className="text-text-secondary">Average Guesses / Win</span>
+              <span className="text-text-primary font-medium tabular-nums">
+                {stats.averageGuessesPerWin !== undefined ? stats.averageGuessesPerWin.toFixed(1) : '-'}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

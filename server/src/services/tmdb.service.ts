@@ -108,6 +108,13 @@ export async function fetchImage(backdropPath: string): Promise<Buffer> {
 }
 
 /**
+ * Seed or manually populate the image cache (useful for testing or prefetching).
+ */
+export function setCachedImage(backdropPath: string, buffer: Buffer): void {
+  imageBufferCache.set(backdropPath, buffer);
+}
+
+/**
  * Clear the image buffer cache (e.g., called on daily reset).
  */
 export function clearImageCache(): void {

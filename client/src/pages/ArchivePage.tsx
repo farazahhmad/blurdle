@@ -34,38 +34,44 @@ export function ArchivePage({ onSelectPuzzle, onPlayToday }: ArchivePageProps) {
   }, []);
 
   return (
-    <div className="w-full max-w-xl mx-auto px-4 pb-8 flex flex-col gap-6">
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 pb-12 flex flex-col gap-6">
       {/* Title & Today Link */}
-      <div className="flex items-center justify-between border-b border-white/5 pb-4">
+      <div className="flex items-center justify-between border-b border-border pb-5">
         <div>
-          <h1 className="text-xl font-bold uppercase tracking-widest text-cinema-light">
+          <div className="flex items-center gap-2 mb-2 font-mono text-xs uppercase tracking-mono-caps text-text-tertiary">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent inline-block shadow-[0_0_6px_rgba(255,200,61,0.6)]" />
+            <span>Archive</span>
+            <span className="opacity-40">/</span>
+            <span>Past Editions</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
             Puzzle Archive
           </h1>
-          <p className="text-xs text-cinema-light/40 mt-0.5">
-            Play previous days without affecting your streak
+          <p className="text-xs font-mono text-text-secondary mt-1">
+            Play previous days without affecting your active daily streak
           </p>
         </div>
         <button
           onClick={onPlayToday}
-          className="px-3 py-1.5 bg-cinema-accent/10 border border-cinema-accent/30 hover:bg-cinema-accent/20 text-cinema-accent text-xs font-semibold rounded-lg transition-colors uppercase tracking-wider"
+          className="btn-primary text-xs"
         >
-          Play Today 🎬
+          Play Today
         </button>
       </div>
 
       {loading && (
-        <div className="flex flex-col items-center justify-center py-16 gap-3">
-          <div className="w-8 h-8 rounded-full border-2 border-cinema-gray border-t-cinema-accent animate-spin" />
-          <p className="text-xs text-cinema-light/40 uppercase tracking-widest">Loading archive...</p>
+        <div className="flex flex-col items-center justify-center py-20 gap-3">
+          <div className="w-6 h-6 rounded-full border-2 border-border border-t-white animate-spin" />
+          <p className="font-mono text-xs text-text-tertiary uppercase tracking-mono-caps">Loading archive...</p>
         </div>
       )}
 
       {error && (
-        <div className="bg-cinema-red/10 border border-cinema-red/30 text-cinema-light text-xs rounded-xl p-4 text-center">
-          <p>{error}</p>
+        <div className="card p-6 text-center max-w-sm mx-auto">
+          <p className="text-status-red text-xs font-mono">{error}</p>
           <button
             onClick={() => loadData(page)}
-            className="mt-3 px-3 py-1 bg-white/10 rounded-lg text-xs hover:bg-white/20 transition-colors"
+            className="btn-secondary text-xs mt-3"
           >
             Retry
           </button>
@@ -75,48 +81,58 @@ export function ArchivePage({ onSelectPuzzle, onPlayToday }: ArchivePageProps) {
       {!loading && !error && (
         <>
           {/* Calendar / Tile Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
             {items.map((item) => {
               const won = item.status === 'won';
               const lost = item.status === 'lost';
               const playing = item.status === 'playing';
-
-              let badgeColor = 'bg-cinema-gray/30 text-cinema-light/40 border-white/5';
-              let badgeText = 'Not Played';
-
-              if (won) {
-                badgeColor = 'bg-cinema-green/20 text-cinema-green border-cinema-green/30';
-                badgeText = `${item.guessesUsed}/6 Won`;
-              } else if (lost) {
-                badgeColor = 'bg-cinema-red/20 text-cinema-red border-cinema-red/30';
-                badgeText = 'Lost';
-              } else if (playing) {
-                badgeColor = 'bg-cinema-accent/20 text-cinema-accent border-cinema-accent/30';
-                badgeText = 'Playing';
-              }
 
               return (
                 <button
                   key={item.puzzleNumber}
                   onClick={() => onSelectPuzzle(item.puzzleNumber)}
                   className="
-                    group flex flex-col items-center justify-between p-3.5
-                    bg-cinema-darker border border-white/5 hover:border-cinema-accent/40
-                    rounded-xl transition-all duration-200 hover:-translate-y-0.5
-                    text-left
+                    card p-4 text-left transition-colors cursor-pointer
+                    hover:bg-surface-raised hover:border-border-strong
+                    flex flex-col justify-between gap-3 group
                   "
                 >
-                  <div className="w-full flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-cinema-light group-hover:text-cinema-accent transition-colors">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs text-text-tertiary">
                       #{item.puzzleNumber}
                     </span>
-                    <span className="text-[10px] text-cinema-light/30">
+                    <span className="font-mono text-[11px] text-text-tertiary">
                       {item.dateKey}
                     </span>
                   </div>
 
-                  <div className={`w-full py-1 text-center rounded-md border text-[10px] font-semibold uppercase tracking-wider ${badgeColor}`}>
-                    {badgeText}
+                  <div className="flex items-center justify-between pt-1">
+                    {won && (
+                      <span className="badge-pill border-status-green/30 text-status-green">
+                        <span className="w-1.5 h-1.5 rounded-full bg-status-green inline-block" />
+                        {item.guessesUsed}/6 Won
+                      </span>
+                    )}
+                    {lost && (
+                      <span className="badge-pill border-status-red/30 text-status-red">
+                        <span className="w-1.5 h-1.5 rounded-full bg-status-red inline-block" />
+                        Ended
+                      </span>
+                    )}
+                    {playing && (
+                      <span className="badge-pill border-status-amber/30 text-status-amber">
+                        <span className="w-1.5 h-1.5 rounded-full bg-status-amber inline-block" />
+                        Playing
+                      </span>
+                    )}
+                    {item.status === 'not_played' && (
+                      <span className="badge-pill">
+                        Play
+                      </span>
+                    )}
+                    <span className="text-text-tertiary group-hover:text-text-primary text-xs transition-colors">
+                      →
+                    </span>
                   </div>
                 </button>
               );
@@ -125,21 +141,21 @@ export function ArchivePage({ onSelectPuzzle, onPlayToday }: ArchivePageProps) {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between pt-4 border-t border-white/5">
+            <div className="flex items-center justify-center gap-2 pt-6 font-mono text-xs">
               <button
                 disabled={page <= 1}
                 onClick={() => loadData(page - 1)}
-                className="px-3 py-1.5 bg-cinema-gray/40 hover:bg-cinema-gray/60 disabled:opacity-30 rounded-lg text-xs font-medium text-cinema-light transition-colors"
+                className="btn-secondary text-xs px-3.5 py-1.5 disabled:opacity-30"
               >
                 Previous
               </button>
-              <span className="text-xs text-cinema-light/40 font-medium">
+              <span className="px-3 text-text-tertiary tabular-nums">
                 Page {page} of {totalPages}
               </span>
               <button
                 disabled={page >= totalPages}
                 onClick={() => loadData(page + 1)}
-                className="px-3 py-1.5 bg-cinema-gray/40 hover:bg-cinema-gray/60 disabled:opacity-30 rounded-lg text-xs font-medium text-cinema-light transition-colors"
+                className="btn-secondary text-xs px-3.5 py-1.5 disabled:opacity-30"
               >
                 Next
               </button>

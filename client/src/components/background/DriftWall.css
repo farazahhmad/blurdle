@@ -1,0 +1,71 @@
+.driftwall-viewport {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.driftwall-scene {
+  position: relative;
+  width: 140vw;
+  height: 140vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.driftwall-stage {
+  display: flex;
+  gap: var(--driftwall-gap, 16px);
+  transform-style: preserve-3d;
+}
+
+.driftwall-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--driftwall-gap, 16px);
+  will-change: transform;
+}
+
+.driftwall-tile {
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: #1f1813;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.driftwall-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.driftwall-tile-dim {
+  position: absolute;
+  inset: 0;
+  background: #16110e;
+  pointer-events: none;
+}
+
+/* Edge fade gradients */
+.driftwall-fade-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%,
+    transparent 35%,
+    rgba(22, 17, 14, 0.4) 75%,
+    #16110e 100%
+  );
+}

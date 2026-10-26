@@ -101,8 +101,8 @@ export function GuessInput({
     <div ref={containerRef} className="relative w-full">
       <div className="relative">
         {/* Search icon */}
-        <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cinema-light/40 pointer-events-none">
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary pointer-events-none">
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}>
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
@@ -119,7 +119,7 @@ export function GuessInput({
             activeIndex >= 0 ? `option-${activeIndex}` : undefined
           }
           aria-label="Search for a movie"
-          placeholder={disabled ? 'Game over' : 'Search for a movie…'}
+          placeholder={disabled ? 'Game over' : 'Search for a title...'}
           value={query}
           disabled={disabled}
           onChange={(e) => setQuery(e.target.value)}
@@ -130,38 +130,19 @@ export function GuessInput({
           autoComplete="off"
           spellCheck={false}
           className={`
-            w-full bg-cinema-gray text-cinema-light placeholder-cinema-light/30
-            border border-white/10 rounded-xl pl-11 pr-4 py-3.5
-            text-base font-medium
-            focus:outline-none focus:border-cinema-accent/60 focus:ring-2
-            focus:ring-cinema-accent/20 transition-all duration-200
-            disabled:opacity-40 disabled:cursor-not-allowed
-            ${open ? 'rounded-b-none border-b-transparent' : ''}
+            w-full bg-surface text-text-primary placeholder:text-text-tertiary
+            border border-border rounded-full pl-11 pr-10 py-3
+            text-sm font-sans placeholder:font-mono
+            focus:outline-none focus:border-border-strong focus-visible:ring-2 focus-visible:ring-white/40
+            transition-colors duration-150
+            disabled:opacity-30 disabled:cursor-not-allowed
           `}
         />
 
         {/* Spinner */}
         {searchLoading && (
-          <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
-            <svg
-              className="w-4 h-4 text-cinema-accent animate-spin"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v8H4z"
-              />
-            </svg>
+          <div className="absolute right-4 top-1/2 -translate-y-1/2">
+            <div className="w-3.5 h-3.5 rounded-full border border-border border-t-white animate-spin" />
           </div>
         )}
       </div>
@@ -174,9 +155,8 @@ export function GuessInput({
           role="listbox"
           aria-label="Movie suggestions"
           className="
-            absolute z-50 left-0 right-0 top-full
-            bg-cinema-gray border border-white/10 border-t-0
-            rounded-b-xl overflow-hidden shadow-2xl
+            absolute z-50 left-0 right-0 top-full mt-2
+            card divide-y divide-border overflow-hidden
             max-h-72 overflow-y-auto
           "
         >
@@ -193,22 +173,16 @@ export function GuessInput({
               onMouseEnter={() => setActiveIndex(idx)}
               className={`
                 flex items-center justify-between
-                px-4 py-3 cursor-pointer select-none
-                transition-colors duration-100
-                border-b border-white/5 last:border-b-0
+                px-4 py-3 cursor-pointer select-none text-sm
+                transition-colors duration-150
                 ${idx === activeIndex
-                  ? 'bg-cinema-accent/20 text-cinema-accent'
-                  : 'text-cinema-light hover:bg-white/5'
+                  ? 'bg-surface-raised text-text-primary'
+                  : 'text-text-secondary hover:bg-surface-raised/50 hover:text-text-primary'
                 }
               `}
             >
               <span className="font-medium truncate">{movie.title}</span>
-              <span
-                className={`
-                  ml-3 text-sm flex-shrink-0 tabular-nums
-                  ${idx === activeIndex ? 'text-cinema-accent/70' : 'text-cinema-light/40'}
-                `}
-              >
+              <span className="ml-3 font-mono text-xs text-text-tertiary shrink-0 tabular-nums">
                 {movie.year}
               </span>
             </li>
@@ -219,11 +193,10 @@ export function GuessInput({
       {/* No results hint */}
       {open && !searchLoading && query.trim().length >= 2 && filtered.length === 0 && (
         <div className="
-          absolute z-50 left-0 right-0 top-full
-          bg-cinema-gray border border-white/10 border-t-0
-          rounded-b-xl px-4 py-3 text-cinema-light/40 text-sm
+          absolute z-50 left-0 right-0 top-full mt-2
+          card px-4 py-3 text-text-tertiary text-xs font-mono
         ">
-          No movies found for &ldquo;{query}&rdquo;
+          No matches found for &ldquo;{query}&rdquo;
         </div>
       )}
     </div>

@@ -10,8 +10,8 @@ export function GuessChips({ guessRecords, maxGuesses }: GuessChipsProps) {
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <h3 className="text-xs font-semibold uppercase tracking-widest text-cinema-light/40 mb-1">
-        Guesses
+      <h3 className="font-mono text-xs uppercase tracking-mono-caps text-text-tertiary mb-0.5">
+        Guesses ({guessRecords.length} of {maxGuesses})
       </h3>
       <div className="flex flex-col gap-2">
         {slots.map((_, idx) => {
@@ -22,14 +22,9 @@ export function GuessChips({ guessRecords, maxGuesses }: GuessChipsProps) {
             return (
               <div
                 key={idx}
-                className="
-                  h-11 rounded-lg border-2 border-dashed border-cinema-gray/60
-                  flex items-center px-4 gap-2 opacity-40
-                "
+                className="h-10 rounded-full border border-border/50 border-dashed flex items-center px-4 font-mono text-xs text-text-tertiary"
               >
-                <span className="text-xs text-cinema-light/30 font-medium tracking-widest uppercase">
-                  #{idx + 1}
-                </span>
+                <span>Slot {idx + 1}</span>
               </div>
             );
           }
@@ -38,19 +33,11 @@ export function GuessChips({ guessRecords, maxGuesses }: GuessChipsProps) {
             return (
               <div
                 key={idx}
-                className="
-                  h-11 rounded-lg bg-cinema-gray/60
-                  border border-white/5
-                  flex items-center px-4 gap-3 pop-in
-                "
+                className="h-10 rounded-full border border-border bg-surface flex items-center px-4 gap-2.5 font-mono text-xs text-text-tertiary pop-in"
               >
-                <span className="text-sm">⏭️</span>
-                <span className="text-sm text-cinema-light/50 font-medium italic">
-                  Skipped
-                </span>
-                <span className="ml-auto text-xs text-cinema-light/30 font-medium tracking-widest">
-                  #{idx + 1}
-                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-text-tertiary inline-block" />
+                <span className="italic">Skipped</span>
+                <span className="ml-auto opacity-50">#{idx + 1}</span>
               </div>
             );
           }
@@ -59,40 +46,24 @@ export function GuessChips({ guessRecords, maxGuesses }: GuessChipsProps) {
             return (
               <div
                 key={idx}
-                className="
-                  h-11 rounded-lg
-                  bg-cinema-green/20 border border-cinema-green/40
-                  flex items-center px-4 gap-3 pop-in
-                "
+                className="h-10 rounded-full border border-status-green/40 bg-status-green/5 text-status-green flex items-center px-4 gap-2.5 text-xs font-mono pop-in"
               >
-                <span className="text-sm">✅</span>
-                <span className="text-sm text-cinema-green font-semibold truncate">
-                  {record.title}
-                </span>
-                <span className="ml-auto text-xs text-cinema-green/60 flex-shrink-0">
-                  {record.year}
-                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-status-green inline-block" />
+                <span className="font-medium text-text-primary truncate">{record.title}</span>
+                <span className="ml-auto text-status-green/80 shrink-0 tabular-nums">{record.year}</span>
               </div>
             );
           }
 
-          // Wrong
+          // Wrong: Muted red text and border (no filled red blocks)
           return (
             <div
               key={idx}
-              className="
-                h-11 rounded-lg
-                bg-cinema-red/20 border border-cinema-red/40
-                flex items-center px-4 gap-3 pop-in
-              "
+              className="h-10 rounded-full border border-status-red/30 bg-transparent text-status-red flex items-center px-4 gap-2.5 text-xs font-mono pop-in"
             >
-              <span className="text-sm">❌</span>
-              <span className="text-sm text-cinema-red/90 font-medium truncate">
-                {record.title}
-              </span>
-              <span className="ml-auto text-xs text-cinema-red/50 flex-shrink-0">
-                {record.year}
-              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-status-red/80 inline-block" />
+              <span className="text-text-secondary truncate">{record.title}</span>
+              <span className="ml-auto text-text-tertiary shrink-0 tabular-nums">{record.year}</span>
             </div>
           );
         })}

@@ -1,26 +1,17 @@
+import { Logo } from './brand/Logo';
+
 export function AboutSection() {
   return (
-    <footer className="w-full py-8 px-4 border-t border-white/5 mt-8">
-      <div className="max-w-xl mx-auto flex flex-col items-center gap-3 text-center">
-        {/* TMDB logo */}
-        <a
-          href="https://www.themoviedb.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="The Movie Database (TMDB)"
-          className="opacity-60 hover:opacity-100 transition-opacity duration-200"
-        >
-          <img
-            src="/tmdb-logo.svg"
-            alt="The Movie Database (TMDB)"
-            className="h-7 w-auto"
-          />
-        </a>
-        <p className="text-cinema-light/30 text-xs leading-relaxed max-w-xs">
+    <footer className="w-full py-10 px-6 border-t border-border mt-auto">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-text-tertiary">
+        <div className="flex items-center gap-2.5">
+          <Logo variant="mark" size={16} />
+          <span className="text-text-secondary font-medium">BLURDLE</span>
+          <span className="opacity-40">/</span>
+          <span>Daily movie guessing game</span>
+        </div>
+        <p className="text-center sm:text-right max-w-md">
           This product uses the TMDB API but is not endorsed or certified by TMDB.
-        </p>
-        <p className="text-cinema-light/20 text-xs">
-          Blurdle — A daily movie guessing game
         </p>
       </div>
     </footer>

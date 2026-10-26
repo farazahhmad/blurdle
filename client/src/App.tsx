@@ -1,66 +1,36 @@
-import { useState, useEffect } from 'react';
-import { GameBoard } from './components/GameBoard';
+import { useState, useEffect, Suspense, lazy } from 'react';
+import { SimpleRouterProvider, useRouter } from './router/SimpleRouter';
 import { StatsModal } from './components/StatsModal';
 import { AboutSection } from './components/AboutSection';
 import { AuthModal } from './components/auth/AuthModal';
-import { ArchivePage } from './pages/ArchivePage';
+import { AppBackground } from './components/background/AppBackground';
+import { Logo } from './components/brand/Logo';
 import { useStats } from './hooks/useStats';
 import { fetchMe, logoutUser, mergeGuestAccount } from './api/client';
 import type { UserProfile } from './types';
 
-function FilmStripIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="w-8 h-8 text-cinema-accent"
-      fill="currentColor"
-    >
-      <path d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z" />
-    </svg>
-  );
-}
+// Code-splitting via React.lazy
+const HomePage = lazy(() => import('./pages/HomePage'));
+const ClassicGamePage = lazy(() => import('./games/classic/ClassicPage'));
+const FlashlightPage = lazy(() => import('./games/flashlight/FlashlightPage'));
+const DoubleExposurePage = lazy(() => import('./games/double-exposure/DoubleExposurePage'));
+const NarratorPage = lazy(() => import('./games/narrator/NarratorPage'));
+const PracticeHubPage = lazy(() => import('./pages/PracticeHubPage'));
+const PracticeClassicPage = lazy(() => import('./games/practice/PracticeClassicPage'));
+const PracticeFlashlightPage = lazy(() => import('./games/practice/PracticeFlashlightPage'));
+const PracticeDoubleExposurePage = lazy(() => import('./games/practice/PracticeDoubleExposurePage'));
+const PracticeNarratorPage = lazy(() => import('./games/practice/PracticeNarratorPage'));
+const ArchivePage = lazy(() =>
+  import('./pages/ArchivePage').then((m) => ({ default: m.ArchivePage }))
+);
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
-function BarChartIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="w-5 h-5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <line x1="18" y1="20" x2="18" y2="10" />
-      <line x1="12" y1="20" x2="12" y2="4" />
-      <line x1="6" y1="20" x2="6" y2="14" />
-    </svg>
-  );
-}
-
-function CalendarIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="w-5 h-5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  );
-}
-
-export default function App() {
+function AppContent() {
+  const { path, navigate } = useRouter();
   const [showStats, setShowStats] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
-
-  // Navigation: 'daily' | 'archive' | 'archive-game'
-  const [currentView, setCurrentView] = useState<'daily' | 'archive' | 'archive-game'>('daily');
   const [archivePuzzleNumber, setArchivePuzzleNumber] = useState<number | undefined>(undefined);
 
   const { stats, syncServerStats } = useStats(Boolean(user));
@@ -91,74 +61,110 @@ export default function App() {
     setShowUserDropdown(false);
   };
 
-  const openArchiveGame = (puzzleNum: number) => {
-    setArchivePuzzleNumber(puzzleNum);
-    setCurrentView('archive-game');
-  };
-
-  const playToday = () => {
-    setArchivePuzzleNumber(undefined);
-    setCurrentView('daily');
+  const renderRoute = () => {
+    switch (path) {
+      case '/':
+        return <HomePage />;
+      case '/classic':
+        return (
+          <ClassicGamePage
+            puzzleNumber={archivePuzzleNumber}
+            onBackToArchive={() => navigate('/archive')}
+            onPlayToday={() => {
+              setArchivePuzzleNumber(undefined);
+              navigate('/classic');
+            }}
+            onOpenAuth={() => setShowAuth(true)}
+            isLoggedIn={Boolean(user)}
+          />
+        );
+      case '/flashlight':
+        return <FlashlightPage />;
+      case '/double-exposure':
+        return <DoubleExposurePage />;
+      case '/narrator':
+        return <NarratorPage />;
+      case '/practice':
+        return <PracticeHubPage />;
+      case '/practice/classic':
+        return <PracticeClassicPage />;
+      case '/practice/flashlight':
+        return <PracticeFlashlightPage />;
+      case '/practice/double-exposure':
+        return <PracticeDoubleExposurePage />;
+      case '/practice/narrator':
+        return <PracticeNarratorPage />;
+      case '/archive':
+        return (
+          <ArchivePage
+            onSelectPuzzle={(puzzleNum) => {
+              setArchivePuzzleNumber(puzzleNum);
+              navigate('/classic');
+            }}
+            onPlayToday={() => {
+              setArchivePuzzleNumber(undefined);
+              navigate('/classic');
+            }}
+          />
+        );
+      default:
+        return <NotFoundPage />;
+    }
   };
 
   return (
-    <div className="min-h-screen bg-cinema-dark flex flex-col">
+    <div className="min-h-screen bg-bg text-text-primary flex flex-col font-sans relative selection:bg-accent/30 selection:text-white">
+      {/* Drifting Movie Poster Wall Background */}
+      <AppBackground />
+
       {/* ── Header ─────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 bg-cinema-darker/90 backdrop-blur-md border-b border-white/5 shadow-lg">
-        <div className="max-w-xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
-          {/* Logo / Title */}
+      <header className="sticky top-0 z-40 bg-bg/90 backdrop-blur-md border-b border-border">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+          {/* Logo / Wordmark */}
           <button
-            onClick={playToday}
-            className="flex items-center gap-2.5 text-left focus:outline-none"
+            onClick={() => navigate('/')}
+            className="flex items-center text-left focus:outline-none group focus-visible:ring-2 focus-visible:ring-accent rounded-lg p-1 transition-opacity hover:opacity-90"
+            aria-label="Blurdle home"
           >
-            <FilmStripIcon />
-            <div className="flex flex-col leading-none">
-              <span
-                className="
-                  font-black uppercase tracking-[0.2em] text-cinema-light
-                  text-base sm:text-lg
-                "
-                style={{ letterSpacing: '0.18em' }}
-              >
-                BLURDLE
-              </span>
-              <span className="text-cinema-accent/60 text-[9px] uppercase tracking-widest font-medium -mt-0.5">
-                Daily Movie Guessing Game
-              </span>
-            </div>
+            <Logo variant="lockup" size={28} detail="simple" />
           </button>
 
           {/* Action buttons */}
           <div className="flex items-center gap-1 sm:gap-2">
-            {/* Archive link */}
+            {/* Practice Reel link */}
             <button
-              onClick={() => setCurrentView(currentView === 'archive' ? 'daily' : 'archive')}
-              aria-label="View archive"
+              onClick={() => navigate('/practice')}
+              aria-label="Practice reel"
               className={`
-                flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg
-                text-cinema-light/60 hover:text-cinema-accent
-                hover:bg-cinema-gray/60 transition-all duration-200
-                focus:outline-none text-xs sm:text-sm font-medium
-                ${currentView === 'archive' ? 'text-cinema-accent bg-cinema-gray/40' : ''}
+                px-3 py-1.5 rounded-full text-xs font-mono transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent
+                ${path.startsWith('/practice') ? 'bg-surface-raised text-accent border border-border-strong' : 'text-text-secondary hover:text-text-primary'}
               `}
             >
-              <CalendarIcon />
-              <span className="hidden sm:inline">Archive</span>
+              Practice
+            </button>
+
+            {/* Archive link */}
+            <button
+              onClick={() => {
+                setArchivePuzzleNumber(undefined);
+                navigate(path === '/archive' ? '/' : '/archive');
+              }}
+              aria-label="View archive"
+              className={`
+                px-3 py-1.5 rounded-full text-xs font-mono transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent
+                ${path === '/archive' ? 'bg-surface-raised text-accent border border-border-strong' : 'text-text-secondary hover:text-text-primary'}
+              `}
+            >
+              Archive
             </button>
 
             {/* Stats button */}
             <button
               onClick={() => setShowStats(true)}
               aria-label="View statistics"
-              className="
-                flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg
-                text-cinema-light/60 hover:text-cinema-accent
-                hover:bg-cinema-gray/60 transition-all duration-200
-                focus:outline-none text-xs sm:text-sm font-medium
-              "
+              className="px-3 py-1.5 rounded-full text-xs font-mono text-text-secondary hover:text-text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
-              <BarChartIcon />
-              <span className="hidden sm:inline">Stats</span>
+              Stats
             </button>
 
             {/* User Profile or Sign In */}
@@ -167,36 +173,35 @@ export default function App() {
                 <button
                   onClick={() => setShowUserDropdown(!showUserDropdown)}
                   className="
-                    flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg
-                    text-cinema-light/80 hover:text-cinema-accent
-                    hover:bg-cinema-gray/60 transition-all duration-200
-                    focus:outline-none text-xs sm:text-sm font-medium border border-white/10
+                    flex items-center gap-2 px-3 py-1.5 rounded-full
+                    bg-surface border border-border text-xs font-mono text-text-primary
+                    hover:border-border-strong transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent
                   "
                 >
-                  <span className="w-2 h-2 rounded-full bg-cinema-green inline-block"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-status-green inline-block"></span>
                   <span className="max-w-[80px] sm:max-w-[120px] truncate">{user.displayName}</span>
                 </button>
 
                 {showUserDropdown && (
-                  <div className="absolute right-0 mt-2 w-40 bg-cinema-darker border border-white/10 rounded-xl shadow-2xl py-1 z-50 animate-slide-up text-xs">
+                  <div className="absolute right-0 mt-2 w-44 bg-surface border border-border rounded-tile shadow-2xl py-1 z-50 animate-slide-up text-xs font-mono">
                     <button
                       onClick={() => { setShowStats(true); setShowUserDropdown(false); }}
-                      className="w-full text-left px-3 py-2 text-cinema-light/80 hover:bg-cinema-gray/50 hover:text-cinema-light transition-colors"
+                      className="w-full text-left px-3.5 py-2 text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-colors"
                     >
                       Statistics
                     </button>
                     <button
-                      onClick={() => { setCurrentView('archive'); setShowUserDropdown(false); }}
-                      className="w-full text-left px-3 py-2 text-cinema-light/80 hover:bg-cinema-gray/50 hover:text-cinema-light transition-colors"
+                      onClick={() => { navigate('/archive'); setShowUserDropdown(false); }}
+                      className="w-full text-left px-3.5 py-2 text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-colors"
                     >
                       Archive
                     </button>
-                    <div className="border-t border-white/5 my-1"></div>
+                    <div className="border-t border-border my-1"></div>
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-3 py-2 text-cinema-red hover:bg-cinema-gray/50 transition-colors"
+                      className="w-full text-left px-3.5 py-2 text-status-red hover:bg-surface-raised transition-colors"
                     >
-                      Log Out
+                      Sign Out
                     </button>
                   </div>
                 )}
@@ -204,11 +209,7 @@ export default function App() {
             ) : (
               <button
                 onClick={() => setShowAuth(true)}
-                className="
-                  px-3 py-1.5 rounded-lg bg-cinema-accent/10 border border-cinema-accent/30
-                  text-cinema-accent hover:bg-cinema-accent/20 transition-all duration-200
-                  focus:outline-none text-xs sm:text-sm font-semibold
-                "
+                className="btn-secondary text-xs px-3.5 py-1.5"
               >
                 Sign In
               </button>
@@ -218,29 +219,25 @@ export default function App() {
       </header>
 
       {/* ── Main ───────────────────────────────────────────────────── */}
-      <main className="flex-1 py-6">
-        {currentView === 'archive' ? (
-          <ArchivePage onSelectPuzzle={openArchiveGame} onPlayToday={playToday} />
-        ) : currentView === 'archive-game' && archivePuzzleNumber ? (
-          <GameBoard
-            key={`archive-${archivePuzzleNumber}`}
-            puzzleNumber={archivePuzzleNumber}
-            onBackToArchive={() => setCurrentView('archive')}
-            onPlayToday={playToday}
-            onOpenAuth={() => setShowAuth(true)}
-            isLoggedIn={Boolean(user)}
-          />
-        ) : (
-          <GameBoard
-            key="daily"
-            onOpenAuth={() => setShowAuth(true)}
-            isLoggedIn={Boolean(user)}
-          />
-        )}
+      <main className="flex-1 py-8 sm:py-12 relative z-10">
+        <Suspense
+          fallback={
+            <div className="flex flex-col items-center justify-center gap-4 py-28 animate-fade-in">
+              <Logo variant="lockup" size={48} detail="full" animate />
+              <p className="text-text-tertiary font-mono text-xs tracking-mono-caps uppercase mt-2">
+                Loading
+              </p>
+            </div>
+          }
+        >
+          {renderRoute()}
+        </Suspense>
       </main>
 
       {/* ── Footer ─────────────────────────────────────────────────── */}
-      <AboutSection />
+      <div className="relative z-10">
+        <AboutSection />
+      </div>
 
       {/* ── Stats Modal ────────────────────────────────────────────── */}
       {showStats && (
@@ -255,5 +252,13 @@ export default function App() {
         />
       )}
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <SimpleRouterProvider>
+      <AppContent />
+    </SimpleRouterProvider>
   );
 }

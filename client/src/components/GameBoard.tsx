@@ -53,12 +53,10 @@ export function GameBoard({
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center gap-6 py-20">
-        <div className="relative">
-          <div className="w-16 h-16 rounded-full border-4 border-cinema-gray border-t-cinema-accent animate-spin" />
-        </div>
-        <p className="text-cinema-light/40 text-sm tracking-widest uppercase animate-pulse">
-          Loading today&rsquo;s puzzle&hellip;
+      <div className="flex flex-col items-center justify-center gap-3 py-24">
+        <div className="w-6 h-6 rounded-full border-2 border-border border-t-white animate-spin" />
+        <p className="text-text-tertiary font-mono text-xs tracking-mono-caps uppercase">
+          Loading puzzle...
         </p>
       </div>
     );
@@ -66,15 +64,14 @@ export function GameBoard({
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 py-20 px-4">
-        <div className="text-4xl">🎬</div>
-        <h2 className="text-cinema-light font-semibold text-lg text-center">
+      <div className="flex flex-col items-center justify-center gap-4 py-20 px-4 card max-w-md mx-auto">
+        <h2 className="text-text-primary font-medium text-base text-center">
           Failed to load puzzle
         </h2>
-        <p className="text-cinema-light/40 text-sm text-center max-w-sm">{error}</p>
+        <p className="text-text-secondary text-xs text-center max-w-sm">{error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="btn-primary mt-2"
+          className="btn-secondary text-xs mt-2"
         >
           Try Again
         </button>
@@ -88,31 +85,34 @@ export function GameBoard({
   const guessedIds = guessRecords.map((r) => r.tmdbId);
 
   return (
-    <div className="w-full max-w-xl mx-auto px-4 pb-8 flex flex-col gap-5">
-      {/* Puzzle number & Navigation */}
-      <div className="flex items-center justify-between px-1">
+    <div className="w-full max-w-xl mx-auto px-4 pb-12 flex flex-col gap-6">
+      {/* Puzzle number & Navigation Eyebrow */}
+      <div className="flex items-center justify-between font-mono text-xs uppercase tracking-mono-caps text-text-tertiary px-1">
         {onBackToArchive ? (
           <button
             onClick={onBackToArchive}
-            className="flex items-center gap-1.5 text-xs text-cinema-accent hover:underline uppercase tracking-wider font-semibold"
+            className="flex items-center gap-1.5 hover:text-text-primary transition-colors font-medium"
           >
-            ← Back to Archive
+            ← Archive
           </button>
         ) : (
-          <span className="w-10"></span>
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent inline-block shadow-[0_0_6px_rgba(255,200,61,0.6)]" />
+            <span>Classic</span>
+          </div>
         )}
-        <span className="text-xs text-cinema-light/40 uppercase tracking-widest font-bold">
+        <span>
           Puzzle #{gameState.puzzleNumber} {puzzleNumber ? '(Archive)' : ''}
         </span>
         {onPlayToday && puzzleNumber ? (
           <button
             onClick={onPlayToday}
-            className="flex items-center gap-1.5 text-xs text-cinema-accent hover:underline uppercase tracking-wider font-semibold"
+            className="flex items-center gap-1.5 text-text-primary hover:underline font-medium"
           >
-            Play Today →
+            Today →
           </button>
         ) : (
-          <span className="w-10"></span>
+          <span className="w-6"></span>
         )}
       </div>
 
@@ -157,7 +157,7 @@ export function GameBoard({
           onClick={() => setShowResult(true)}
           className="btn-primary w-full text-center"
         >
-          {gameState.status === 'won' ? '🎉 View Result' : '💀 See the Answer'}
+          {gameState.status === 'won' ? 'View Result' : 'View Solution'}
         </button>
       )}
 

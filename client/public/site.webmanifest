@@ -1,0 +1,27 @@
+{
+  "name": "Blurdle",
+  "short_name": "Blurdle",
+  "description": "A daily movie guessing game. Start with a blurred frame and name the film before it comes into focus.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#16110e",
+  "background_color": "#16110e",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

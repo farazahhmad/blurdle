@@ -1,6 +1,6 @@
 import type { GameState, MovieSearchResult, GuessResult, RevealData } from '../types';
 
-const BASE_URL = '/api';
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 // ── UUID v4 generator ──────────────────────────────────────────────────────
 function generateUUID(): string {
@@ -177,4 +177,126 @@ export async function mergeGuestAccount() {
 
 export async function fetchServerStats(): Promise<import('../types').GameStats> {
   return apiFetch<import('../types').GameStats>('/stats');
+}
+
+// ── Modes API (Flashlight, Double Exposure, Narrator) ─────────────────────
+
+export async function fetchModesOverview(): Promise<Record<string, { status: string; puzzleNumber: number }>> {
+  return apiFetch<Record<string, { status: string; puzzleNumber: number }>>('/modes/overview');
+}
+
+// Flashlight
+export async function fetchFlashlightToday() {
+  return apiFetch<{
+    puzzleNumber: number;
+    gridCols: number;
+    gridRows: number;
+    revealedTiles: number[];
+    guesses: number[];
+    status: 'playing' | 'won' | 'lost';
+    score: number;
+    reveal?: RevealData;
+  }>('/modes/flashlight/today');
+}
+
+export async function revealFlashlightTile(tileIndex: number) {
+  return apiFetch<{ revealedTiles: number[] }>('/modes/flashlight/reveal', {
+    method: 'POST',
+    body: JSON.stringify({ tileIndex }),
+  });
+}
+
+export async function fetchFlashlightFrame(revealedCount: number): Promise<string> {
+  // Use timestamp or revealedCount in query string to bust browser image cache on state changes
+  const res = await fetch(`${BASE_URL}/modes/flashlight/frame?t=${Date.now()}&rc=${revealedCount}`, {
+    credentials: 'include',
+    headers: { 'x-client-id': getClientId() },
+  });
+  if (!res.ok) throw new Error(`Failed to fetch flashlight frame: ${res.status}`);
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+}
+
+export async function submitFlashlightGuess(tmdbId: number) {
+  return apiFetch<{
+    correct: boolean;
+    status: 'playing' | 'won' | 'lost';
+    score: number;
+    guesses: number[];
+    reveal?: RevealData;
+  }>('/modes/flashlight/guess', {
+    method: 'POST',
+    body: JSON.stringify({ tmdbId }),
+  });
+}
+
+// Double Exposure
+export async function fetchDoubleExposureToday() {
+  return apiFetch<{
+    puzzleNumber: number;
+    slots: Array<{
+      solved: boolean;
+      title?: string;
+      year?: number;
+      genres?: string[];
+      fullImageUrl?: string;
+    }>;
+    guesses: number[];
+    currentLevel: number;
+    status: 'playing' | 'won' | 'lost';
+  }>('/modes/double_exposure/today');
+}
+
+export async function fetchDoubleExposureFrame(level: number): Promise<string> {
+  const res = await fetch(`${BASE_URL}/modes/double_exposure/frame?level=${level}`, {
+    credentials: 'include',
+    headers: { 'x-client-id': getClientId() },
+  });
+  if (!res.ok) throw new Error(`Failed to fetch double exposure frame: ${res.status}`);
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+}
+
+export async function submitDoubleExposureGuess(tmdbId: number) {
+  return apiFetch<{
+    slotSolved: boolean;
+    status: 'playing' | 'won' | 'lost';
+    currentLevel: number;
+    guesses: number[];
+    slots: Array<{
+      solved: boolean;
+      title?: string;
+      year?: number;
+      genres?: string[];
+      fullImageUrl?: string;
+    }>;
+  }>('/modes/double_exposure/guess', {
+    method: 'POST',
+    body: JSON.stringify({ tmdbId }),
+  });
+}
+
+// Narrator
+export async function fetchNarratorToday() {
+  return apiFetch<{
+    puzzleNumber: number;
+    persona: string;
+    hintsShown: string[];
+    guesses: number[];
+    status: 'playing' | 'won' | 'lost';
+    reveal?: RevealData;
+  }>('/modes/narrator/today');
+}
+
+export async function submitNarratorGuess(tmdbId: number) {
+  return apiFetch<{
+    correct: boolean;
+    status: 'playing' | 'won' | 'lost';
+    guesses: number[];
+    hintsShown: string[];
+    reveal?: RevealData;
+  }>('/modes/narrator/guess', {
+    method: 'POST',
+    body: JSON.stringify({ tmdbId }),
+  });
 }

@@ -66,57 +66,60 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal Box */}
-      <div className="relative z-10 w-full max-w-sm bg-cinema-darker border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-slide-up">
+      <div className="relative z-10 w-full max-w-sm card p-6 overflow-hidden animate-slide-up flex flex-col gap-5">
         {/* Header with close button */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-          <h2 className="text-base font-bold uppercase tracking-wider text-cinema-light">
-            {tab === 'login' ? 'Sign In to Blurdle' : 'Create an Account'}
-          </h2>
+        <div className="flex items-center justify-between border-b border-border pb-3.5">
+          <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-mono-caps text-text-tertiary">
+            <span className="w-1.5 h-1.5 rounded-full bg-status-green inline-block" />
+            <span>{tab === 'login' ? 'Sign In' : 'Create Account'}</span>
+          </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-cinema-light/40 hover:text-cinema-light hover:bg-cinema-gray/60 transition-colors"
+            className="text-text-tertiary hover:text-white p-1 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+            aria-label="Close"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex border-b border-white/5 bg-cinema-dark/50">
+        {/* Pill Tabs */}
+        <div className="flex bg-surface-raised rounded-full p-0.5 border border-border text-xs font-mono">
           <button
             onClick={() => { setTab('login'); setError(null); }}
-            className={`flex-1 py-3 text-xs font-semibold uppercase tracking-wider transition-colors ${
+            className={`flex-1 py-1 rounded-full transition-colors ${
               tab === 'login'
-                ? 'border-b-2 border-cinema-accent text-cinema-accent'
-                : 'text-cinema-light/40 hover:text-cinema-light'
+                ? 'bg-white text-black font-medium'
+                : 'text-text-secondary hover:text-white'
             }`}
           >
             Sign In
           </button>
           <button
             onClick={() => { setTab('register'); setError(null); }}
-            className={`flex-1 py-3 text-xs font-semibold uppercase tracking-wider transition-colors ${
+            className={`flex-1 py-1 rounded-full transition-colors ${
               tab === 'register'
-                ? 'border-b-2 border-cinema-accent text-cinema-accent'
-                : 'text-cinema-light/40 hover:text-cinema-light'
+                ? 'bg-white text-black font-medium'
+                : 'text-text-secondary hover:text-white'
             }`}
           >
             Register
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
-          {error && (
-            <div className="bg-cinema-red/20 border border-cinema-red/30 text-cinema-light text-xs rounded-lg p-3">
-              {error}
-            </div>
-          )}
+        {/* Error message */}
+        {error && (
+          <div className="p-3 bg-status-red/10 border border-status-red/30 rounded-tile text-status-red text-xs font-mono">
+            {error}
+          </div>
+        )}
 
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           {tab === 'register' && (
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-cinema-light/70 uppercase tracking-wide">
+            <div>
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-text-tertiary mb-1">
                 Display Name
               </label>
               <input
@@ -124,14 +127,14 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
                 required
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="CinemaLover"
-                className="w-full bg-cinema-gray/50 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-cinema-light focus:outline-none focus:border-cinema-accent/70 transition-colors"
+                placeholder="CinemaBuff"
+                className="w-full bg-surface-raised border border-border focus:border-border-strong rounded-full px-4 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 transition-colors"
               />
             </div>
           )}
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-cinema-light/70 uppercase tracking-wide">
+          <div>
+            <label className="block text-[11px] font-mono uppercase tracking-wider text-text-tertiary mb-1">
               Email Address
             </label>
             <input
@@ -140,55 +143,52 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full bg-cinema-gray/50 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-cinema-light focus:outline-none focus:border-cinema-accent/70 transition-colors"
+              className="w-full bg-surface-raised border border-border focus:border-border-strong rounded-full px-4 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 transition-colors"
             />
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-cinema-light/70 uppercase tracking-wide">
+          <div>
+            <label className="block text-[11px] font-mono uppercase tracking-wider text-text-tertiary mb-1">
               Password
             </label>
             <input
               type="password"
               required
+              minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-cinema-gray/50 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-cinema-light focus:outline-none focus:border-cinema-accent/70 transition-colors"
+              className="w-full bg-surface-raised border border-border focus:border-border-strong rounded-full px-4 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 transition-colors"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 mt-2 bg-cinema-accent hover:bg-cinema-accent-dark text-cinema-darker font-bold rounded-xl text-sm transition-all shadow-lg shadow-cinema-accent/20 active:scale-95 disabled:opacity-50"
+            className="btn-primary w-full py-2.5 mt-2"
           >
             {loading ? 'Please wait...' : tab === 'login' ? 'Sign In' : 'Create Account'}
           </button>
         </form>
 
-        {/* Optional Google ID token section */}
-        <div className="px-6 pb-6 pt-2 border-t border-white/5 flex flex-col gap-2">
-          <p className="text-[11px] text-cinema-light/40 text-center uppercase tracking-wider">
-            Optional: Google Sign-In
-          </p>
-          <div className="flex gap-2">
+        {/* Google OAuth (Optional fallback token paste) */}
+        <div className="pt-3 border-t border-border flex flex-col gap-2">
+          <form onSubmit={handleGoogleSubmit} className="flex gap-2">
             <input
               type="text"
-              placeholder="Google ID token"
+              placeholder="Google ID Token (Optional)"
               value={googleToken}
               onChange={(e) => setGoogleToken(e.target.value)}
-              className="flex-1 bg-cinema-gray/30 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-cinema-light placeholder:text-cinema-light/30 focus:outline-none"
+              className="flex-1 bg-surface-raised border border-border rounded-full px-3 py-1.5 text-xs text-text-primary placeholder:text-text-tertiary font-mono focus:outline-none"
             />
             <button
-              type="button"
-              onClick={handleGoogleSubmit}
+              type="submit"
               disabled={loading || !googleToken.trim()}
-              className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-cinema-light text-xs font-medium rounded-lg transition-colors disabled:opacity-40"
+              className="btn-secondary text-xs px-3 py-1.5 shrink-0"
             >
-              Verify
+              Google
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </div>

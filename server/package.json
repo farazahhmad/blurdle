@@ -7,7 +7,12 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "seed": "tsx src/scripts/seed.ts"
+    "seed": "tsx src/scripts/seed.ts",
+    "seed:narrator": "tsx src/scripts/seed-narrator.ts",
+    "seed:bg": "tsx src/scripts/seed-background-posters.ts",
+    "seed:practice": "tsx src/scripts/seed-practice.ts",
+    "test:practice": "tsx src/scripts/verify-practice.ts",
+    "test:modes": "tsx src/scripts/verify-modes.ts"
   },
   "dependencies": {
     "axios": "^1.7.2",

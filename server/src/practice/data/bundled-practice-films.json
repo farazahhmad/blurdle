@@ -1,0 +1,402 @@
+[
+  {
+    "tmdbId": 155,
+    "title": "The Dark Knight",
+    "year": 2008,
+    "genres": ["Action", "Crime", "Drama"],
+    "backdropPath": "/dqK9Hag1054tghRQSqLSfrkvQnA.jpg",
+    "posterPath": "/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+    "narrator": {
+      "persona": "Weary Vigilante",
+      "hints": [
+        "A city drenched in neon, corruption, and an unsettling laugh echoing through the night.",
+        "A clown prince leaves calling cards while burning mountains of mob money.",
+        "The caped protector faces a moral dilemma with two ferries and a ticking clock."
+      ]
+    }
+  },
+  {
+    "tmdbId": 27205,
+    "title": "Inception",
+    "year": 2010,
+    "genres": ["Action", "Science Fiction", "Adventure"],
+    "backdropPath": "/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg",
+    "posterPath": "/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
+    "narrator": {
+      "persona": "Subconscious Architect",
+      "hints": [
+        "Gravity feels like an optional suggestion when the brass horns start blaring.",
+        "A spinning top determines whether we are waking up or sinking five layers deeper.",
+        "A team of mental infiltrators plants an idea inside an heir's snow fortress."
+      ]
+    }
+  },
+  {
+    "tmdbId": 157336,
+    "title": "Interstellar",
+    "year": 2014,
+    "genres": ["Adventure", "Drama", "Science Fiction"],
+    "backdropPath": "/xJHokMbljvjADYdit5fK5VQsXEG.jpg",
+    "posterPath": "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+    "narrator": {
+      "persona": "Deep Space Wanderer",
+      "hints": [
+        "Dust storms choked the cornfields, forcing humanity to look upward at the stars.",
+        "One hour spent on a water planet cost decades of family messages back home.",
+        "Love transcends time and dimensions behind a dusty bedroom bookshelf."
+      ]
+    }
+  },
+  {
+    "tmdbId": 680,
+    "title": "Pulp Fiction",
+    "year": 1994,
+    "genres": ["Crime", "Drama"],
+    "backdropPath": "/suaEOtk1N1sgg2MTM7oZd2cfVp3.jpg",
+    "posterPath": "/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+    "narrator": {
+      "persona": "Diner Philosopher",
+      "hints": [
+        "Conversations drift casually from European burger names to divine intervention.",
+        "A mysterious glowing briefcase must be delivered safely to the boss.",
+        "A dance contest trophy at Jack Rabbit Slim's leads into an adrenaline overdose."
+      ]
+    }
+  },
+  {
+    "tmdbId": 550,
+    "title": "Fight Club",
+    "year": 1999,
+    "genres": ["Drama"],
+    "backdropPath": "/hZkgoQYus5vegHoetLkCJzb17zJ.jpg",
+    "posterPath": "/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
+    "narrator": {
+      "persona": "Sleep-Deprived Insomniac",
+      "hints": [
+        "I was obsessing over IKEA catalogs until a soap salesman changed everything.",
+        "The first rule of our subterranean gathering is that you do not talk about it.",
+        "Credit card towers crumble to the soothing tune of the Pixies."
+      ]
+    }
+  },
+  {
+    "tmdbId": 603,
+    "title": "The Matrix",
+    "year": 1999,
+    "genres": ["Action", "Science Fiction"],
+    "backdropPath": "/l4QHerTSbflqIJCm0jC5j12xVq3.jpg",
+    "posterPath": "/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
+    "narrator": {
+      "persona": "Cyberpunk Operator",
+      "hints": [
+        "Green digital code cascades down the screen while office cubicles feel suffocating.",
+        "A red pill or a blue pill decides whether you see the rabbit hole's true bottom.",
+        "Dodging bullets in slow motion on a windy skyscraper rooftop."
+      ]
+    }
+  },
+  {
+    "tmdbId": 120,
+    "title": "The Lord of the Rings: The Fellowship of the Ring",
+    "year": 2001,
+    "genres": ["Adventure", "Fantasy", "Action"],
+    "backdropPath": "/vRQnzNFsSlrqQUPOV9KUr5XRcu5.jpg",
+    "posterPath": "/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
+    "narrator": {
+      "persona": "Ancient Lorekeeper",
+      "hints": [
+        "Peaceful green hills and smoking pipes are disrupted by nine dark riders on black steeds.",
+        "A broken blade is re-forged and nine companions swear an oath in an elven haven.",
+        "You shall not pass, bellows a wizard standing on a narrow underground bridge."
+      ]
+    }
+  },
+  {
+    "tmdbId": 19995,
+    "title": "Avatar",
+    "year": 2009,
+    "genres": ["Action", "Adventure", "Fantasy", "Science Fiction"],
+    "backdropPath": "/vL5LR6WdxWPjC3D4QYq0OQ8p68g.jpg",
+    "posterPath": "/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",
+    "narrator": {
+      "persona": "Alien Botanist",
+      "hints": [
+        "Floating mountains hang suspended in the humid mist above bioluminescent jungles.",
+        "A paralyzed marine connects his consciousness to a tall, blue-skinned clone.",
+        "A great battle rages to protect the sacred Tree of Souls from bulldozers."
+      ]
+    }
+  },
+  {
+    "tmdbId": 299536,
+    "title": "Avengers: Infinity War",
+    "year": 2018,
+    "genres": ["Action", "Adventure", "Science Fiction"],
+    "backdropPath": "/lmZFxVIz3zsEcyp4Acwh23wh59G.jpg",
+    "posterPath": "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+    "narrator": {
+      "persona": "Intergalactic Chronicler",
+      "hints": [
+        "A golden glove yearns for six colorful cosmic rocks across the galaxy.",
+        "Heroes fight desperately in Wakandan fields while a sorcerer views fourteen million futures.",
+        "With a single snap of giant purple fingers, half of all living things turn to dust."
+      ]
+    }
+  },
+  {
+    "tmdbId": 129,
+    "title": "Spirited Away",
+    "year": 2001,
+    "genres": ["Animation", "Family", "Fantasy"],
+    "backdropPath": "/Ab8mkHmkYADjU7wQiOkia99GQI.jpg",
+    "posterPath": "/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg",
+    "narrator": {
+      "persona": "Bathhouse Attendant",
+      "hints": [
+        "Parents gorge on feast food until transforming into hefty pigs at twilight.",
+        "A young girl signs away her real name to scrub giant tubs for eccentric spirits.",
+        "A mysterious masked ghost who offers gold turns greedy workers upside down."
+      ]
+    }
+  },
+  {
+    "tmdbId": 238,
+    "title": "The Godfather",
+    "year": 1972,
+    "genres": ["Drama", "Crime"],
+    "backdropPath": "/tmU7GeKVybMWFButWEGl2M4GeiP.jpg",
+    "posterPath": "/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
+    "narrator": {
+      "persona": "Family Consigliere",
+      "hints": [
+        "A summer wedding where favors are requested in the dim private office upstairs.",
+        "An offer you cannot refuse delivered with a severed thoroughbred head in bed.",
+        "A quiet war veteran takes revenge in an Italian restaurant and flees to Sicily."
+      ]
+    }
+  },
+  {
+    "tmdbId": 424,
+    "title": "Schindler's List",
+    "year": 1993,
+    "genres": ["Drama", "History", "War"],
+    "backdropPath": "/zb6fM1CX41D9r69hdYvv9trR00F.jpg",
+    "posterPath": "/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg",
+    "narrator": {
+      "persona": "Historical Archivist",
+      "hints": [
+        "Monochrome frames preserve the darkest chapters of twentieth-century Europe.",
+        "A splash of bright red coat stands out amid tragic Kraków streets.",
+        "An enamelware factory owner uses his fortune to save more than a thousand souls."
+      ]
+    }
+  },
+  {
+    "tmdbId": 496243,
+    "title": "Parasite",
+    "year": 2019,
+    "genres": ["Comedy", "Thriller", "Drama"],
+    "backdropPath": "/hiKmpZMGZsrkA3cdce8a7Dpos1j.jpg",
+    "posterPath": "/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+    "narrator": {
+      "persona": "Basement Observer",
+      "hints": [
+        "Folding pizza boxes in a damp semi-basement apartment while scavenging neighborhood Wi-Fi.",
+        "A forged diploma unlocks employment at an ultra-modern architectural mansion.",
+        "A secret bunker hidden below the pantry changes a torrential rainy birthday."
+      ]
+    }
+  },
+  {
+    "tmdbId": 389,
+    "title": "12 Angry Men",
+    "year": 1957,
+    "genres": ["Drama"],
+    "backdropPath": "/qqHQsStV6ta9FlTxQ4FvEVho2aL.jpg",
+    "posterPath": "/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg",
+    "narrator": {
+      "persona": "Court Stenographer",
+      "hints": [
+        "Twelve weary citizens lock into a sweltering jury room on the hottest day of summer.",
+        "A single dissenting vote casts doubt upon an open-and-shut homicide trial.",
+        "A switchblade identical to the murder weapon is slammed dramatically onto the wooden table."
+      ]
+    }
+  },
+  {
+    "tmdbId": 13,
+    "title": "Forrest Gump",
+    "year": 1994,
+    "genres": ["Comedy", "Drama", "Romance"],
+    "backdropPath": "/7c9UVPPiTPltouxShY94r3BsTX7.jpg",
+    "posterPath": "/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg",
+    "narrator": {
+      "persona": "Park Bench Listener",
+      "hints": [
+        "Life is likened to a box of assorted chocolates where surprises await every bite.",
+        "Leg braces shatter as a young boy sprints past Southern football scouts.",
+        "A shrimping boat survives a hurricane to build an empire of ping-pong and fruit stocks."
+      ]
+    }
+  },
+  {
+    "tmdbId": 769,
+    "title": "GoodFellas",
+    "year": 1990,
+    "genres": ["Drama", "Crime"],
+    "backdropPath": "/sw7mordbZxgITU877yTpZCud90M.jpg",
+    "posterPath": "/aKuFiU82s5ISJpGZp7YkIr3kCUd.jpg",
+    "narrator": {
+      "persona": "Lounge Bartender",
+      "hints": [
+        "As far back as I can remember, I always wanted to be a gangster.",
+        "A steadicam glides through the Copacabana kitchen to set up a front-row table.",
+        "Helicopters shadow a frantic Sunday sauce delivery while guitars crash in the background."
+      ]
+    }
+  },
+  {
+    "tmdbId": 24428,
+    "title": "The Avengers",
+    "year": 2012,
+    "genres": ["Action", "Adventure", "Science Fiction"],
+    "backdropPath": "/9BBTo63ANSmSVaxpdUQjlPazaTe.jpg",
+    "posterPath": "/RYMXAoc9qgy7fyV5eXwZlZ4x4T.jpg",
+    "narrator": {
+      "persona": "Shield Agent",
+      "hints": [
+        "A blue glowing cube falls into the hands of a mischievous Nordic prince.",
+        "Egos clash inside a flying helicarrier until an alien fleet arrives through the clouds.",
+        "A circular tracking shot unites six earth's mightiest heroes in Grand Central."
+      ]
+    }
+  },
+  {
+    "tmdbId": 807,
+    "title": "Se7en",
+    "year": 1995,
+    "genres": ["Crime", "Mystery", "Thriller"],
+    "backdropPath": "/ba4OhKGDFBeNzuvZ7yvJonPv0Vd.jpg",
+    "posterPath": "/6yoghtyTpznpBik8EngEmJsk9UO.jpg",
+    "narrator": {
+      "persona": "Rainy Beat Cop",
+      "hints": [
+        "Persistent rain drenches a grim city where deadly biblical sins dictate homicides.",
+        "A retiring veteran detective mentors an impetuous newcomer through dark crime scenes.",
+        "A delivery truck brings an ominous cardboard box into the desolate power line desert."
+      ]
+    }
+  },
+  {
+    "tmdbId": 278,
+    "title": "The Shawshank Redemption",
+    "year": 1994,
+    "genres": ["Drama", "Crime"],
+    "backdropPath": "/kXfqCdQKsToO0OUXHcrrNCHDBzO.jpg",
+    "posterPath": "/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
+    "narrator": {
+      "persona": "Prison Yard Contrabandier",
+      "hints": [
+        "Hope is a dangerous thing inside cold limestone walls, but some birds cannot be caged.",
+        "Tarring a license plate factory roof earns a crew of inmates cold suds on an afternoon.",
+        "A tiny rock hammer and a poster of Rita Hayworth conceal two decades of steady crawling."
+      ]
+    }
+  },
+  {
+    "tmdbId": 11,
+    "title": "Star Wars: Episode IV - A New Hope",
+    "year": 1977,
+    "genres": ["Adventure", "Action", "Science Fiction"],
+    "backdropPath": "/zqkmTXFkkgagqK6B4x8Q2X0dO3y.jpg",
+    "posterPath": "/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg",
+    "narrator": {
+      "persona": "Cantina Musician",
+      "hints": [
+        "Twin suns set over dry sands as a moisture farmer longs for academy adventures.",
+        "A dusty freighter outruns star destroyers after hiring an old hermit and two droids.",
+        "Proton torpedoes find an impossible thermal exhaust port to blow up the ultimate battlestation."
+      ]
+    }
+  },
+  {
+    "tmdbId": 1891,
+    "title": "The Empire Strikes Back",
+    "year": 1980,
+    "genres": ["Adventure", "Action", "Science Fiction"],
+    "backdropPath": "/aJCtkxLLRJJ1LaprV2CLLkFxiAc.jpg",
+    "posterPath": "/7BuH8itW94NDfm6Ft0neEvodWz9.jpg",
+    "narrator": {
+      "persona": "Cloud City Administrator",
+      "hints": [
+        "Giant armored walkers stomp across icy snow plains while snowspeeders wrap cables.",
+        "A little green master lifts sunken fighters from swamp waters with his mind.",
+        "A carbonite freeze chamber and an earth-shattering paternal confession on a precarious catwalk."
+      ]
+    }
+  },
+  {
+    "tmdbId": 329,
+    "title": "Jurassic Park",
+    "year": 1993,
+    "genres": ["Adventure", "Science Fiction"],
+    "backdropPath": "/5MFjGjM3c8x3B0q5q9s8N4w6m1A.jpg",
+    "posterPath": "/oU7OqIs1OTdpKIwwMEeV398NdIy.jpg",
+    "narrator": {
+      "persona": "Paleobotanist",
+      "hints": [
+        "Amber mosquitoes harbor ancient prehistoric DNA on a remote Costa Rican island.",
+        "Concentric ripples vibrate in cups of water right before heavy footsteps shake the fence.",
+        "Velociraptors figure out how to open metal kitchen door handles."
+      ]
+    }
+  },
+  {
+    "tmdbId": 98,
+    "title": "Gladiator",
+    "year": 2000,
+    "genres": ["Action", "Drama", "Adventure"],
+    "backdropPath": "/kSNo3J5JcQYq1vX0Q2UeZzN7d5r.jpg",
+    "posterPath": "/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg",
+    "narrator": {
+      "persona": "Colosseum Spectator",
+      "hints": [
+        "Hands brush through golden wheat fields before barbarians clash in Germanic forests.",
+        "A betrayed general is enslaved and rises as a champion for screaming arena crowds.",
+        "Are you not entertained? he shouts after slaying gladiators in imperial sands."
+      ]
+    }
+  },
+  {
+    "tmdbId": 597,
+    "title": "Titanic",
+    "year": 1997,
+    "genres": ["Drama", "Romance"],
+    "backdropPath": "/yDIv5Gn8vfG2v9z2f6JcW6k4m.jpg",
+    "posterPath": "/9xjZS2rlVxm8SFx8kxrUpZ8wh5t.jpg",
+    "narrator": {
+      "persona": "Third-Class Passenger",
+      "hints": [
+        "A lucky poker hand wins two young immigrants tickets on an unsinkable ocean liner.",
+        "Standing at the bow with arms outstretched feeling like the king of the world.",
+        "A look-out rings the bell as a looming iceberg tears into the icy Atlantic hull."
+      ]
+    }
+  },
+  {
+    "tmdbId": 122,
+    "title": "The Lord of the Rings: The Return of the King",
+    "year": 2003,
+    "genres": ["Adventure", "Fantasy", "Action"],
+    "backdropPath": "/2u7zbn8EudG6kLlBzJrTe9G70I7.jpg",
+    "posterPath": "/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg",
+    "narrator": {
+      "persona": "Gondorian Guard",
+      "hints": [
+        "Signal beacons ignite atop snowy mountain crests from realm to realm.",
+        "Six thousand spears charge into battle at dawn on the Pelennor Fields.",
+        "A fiery volcanic fissure swallows the cursed golden trinket once and for all."
+      ]
+    }
+  }
+]

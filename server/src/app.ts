@@ -11,6 +11,8 @@ import guessRoutes from './routes/guess.routes';
 import authRoutes from './routes/auth.routes';
 import archiveRoutes from './routes/archive.routes';
 import statsRoutes from './routes/stats.routes';
+import modesRoutes from './routes/modes.routes';
+import practiceRoutes from './practice/routes/practice.routes';
 
 const app = express();
 
@@ -43,6 +45,8 @@ app.get('/health', (_req, res) => {
 });
 
 // Mount routers
+app.use('/api/practice', practiceRoutes);
+app.use('/api/modes', modesRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/archive', archiveRoutes);
 app.use('/api/stats', statsRoutes);

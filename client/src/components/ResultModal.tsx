@@ -44,7 +44,6 @@ export function ResultModal({
 
   const won = status === 'won';
   const guessesUsed = guessRecords.filter((g) => g.type !== 'skipped').length;
-  const correctGuess = guessRecords.find((g) => g.type === 'correct');
 
   const winPct =
     stats.gamesPlayed > 0
@@ -56,7 +55,7 @@ export function ResultModal({
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
-      aria-label={won ? 'You won!' : 'Game over'}
+      aria-label={won ? 'Puzzle Solved' : 'Puzzle Ended'}
     >
       {/* Backdrop */}
       <div
@@ -71,149 +70,111 @@ export function ResultModal({
         tabIndex={-1}
         className="
           relative z-10 w-full max-w-md
-          bg-cinema-darker border border-white/10 rounded-2xl
-          shadow-2xl overflow-hidden animate-slide-up
-          focus:outline-none
+          card p-6 sm:p-7 overflow-hidden animate-slide-up
+          focus:outline-none flex flex-col gap-5
         "
       >
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="
-            absolute top-3 right-3 z-10
-            p-2 rounded-lg text-cinema-light/40 hover:text-cinema-light
-            hover:bg-cinema-gray/60 transition-colors
-            focus:outline-none focus:ring-2 focus:ring-cinema-accent/40
-          "
-          aria-label="Close"
-        >
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        {/* Movie poster */}
-        {revealData?.fullImageUrl && (
-          <div className="relative w-full aspect-video overflow-hidden film-grain">
-            <img
-              src={revealData.fullImageUrl}
-              alt={revealData.title}
-              className="w-full h-full object-cover"
+        {/* Top bar with Eyebrow and Close button */}
+        <div className="flex items-center justify-between border-b border-border pb-3.5">
+          <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-mono-caps text-text-tertiary">
+            <span
+              className={`w-2 h-2 rounded-full inline-block ${
+                won ? 'bg-status-green' : 'bg-status-red'
+              }`}
             />
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-cinema-darker via-transparent to-transparent" />
+            <span>{won ? `Solved in ${guessesUsed} of ${maxGuesses}` : 'Not Solved'}</span>
+            <span className="opacity-40">/</span>
+            <span>#{puzzleNumber}</span>
+          </div>
 
-            {/* Status badge */}
-            <div className="absolute top-3 left-3">
-              <span
-                className={`
-                  px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest
-                  ${won
-                    ? 'bg-cinema-green/90 text-white'
-                    : 'bg-cinema-red/90 text-white'
-                  }
-                `}
-              >
-                {won ? '🎉 Correct!' : '💀 Game Over'}
-              </span>
+          <button
+            onClick={onClose}
+            className="text-text-tertiary hover:text-white p-1 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+            aria-label="Close modal"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Movie Reveal Card */}
+        {revealData && (
+          <div className="flex flex-col gap-3">
+            {revealData.fullImageUrl && (
+              <div className="relative w-full aspect-video rounded-tile overflow-hidden border border-border bg-bg">
+                <img
+                  src={revealData.fullImageUrl}
+                  alt={revealData.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+
+            <div className="p-4 bg-surface-raised border border-border rounded-tile text-left">
+              <h2 className="text-text-primary font-semibold text-lg leading-tight tracking-tight">
+                {revealData.title}
+                <span className="text-text-tertiary font-mono font-normal ml-2 text-sm">
+                  ({revealData.year})
+                </span>
+              </h2>
+              {revealData.genres.length > 0 && (
+                <p className="text-text-secondary text-xs font-mono mt-1">
+                  {revealData.genres.join(' · ')}
+                </p>
+              )}
             </div>
           </div>
         )}
 
-        <div className="p-6 flex flex-col gap-5">
-          {/* Headline */}
-          <div className="text-center">
-            {won ? (
-              <>
-                <p className="text-3xl mb-1">🎉</p>
-                <h2 className="text-xl font-bold text-cinema-light">
-                  You got it in{' '}
-                  <span className="text-cinema-accent">
-                    {guessesUsed} {guessesUsed === 1 ? 'guess' : 'guesses'}
-                  </span>
-                  !
-                </h2>
-                {correctGuess && (
-                  <p className="text-sm text-cinema-light/50 mt-1">
-                    {correctGuess.title}
-                  </p>
-                )}
-              </>
-            ) : (
-              <>
-                <p className="text-3xl mb-1">💀</p>
-                <h2 className="text-xl font-bold text-cinema-light">
-                  Better luck tomorrow!
-                </h2>
-              </>
-            )}
-
-            {revealData && (
-              <div className="mt-3 p-3 bg-cinema-gray/60 rounded-xl border border-white/5 text-left">
-                <p className="text-cinema-light font-semibold text-lg leading-tight">
-                  {revealData.title}
-                  <span className="text-cinema-light/40 font-normal ml-2 text-base">
-                    ({revealData.year})
-                  </span>
-                </p>
-                {revealData.genres.length > 0 && (
-                  <p className="text-cinema-light/50 text-sm mt-1">
-                    {revealData.genres.join(' · ')}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Mini stats row */}
-          <div className="grid grid-cols-4 gap-2 text-center">
-            {[
-              { label: 'Played', value: stats.gamesPlayed },
-              { label: 'Win %', value: `${winPct}%` },
-              { label: 'Streak', value: stats.currentStreak },
-              { label: 'Best', value: stats.maxStreak },
-            ].map(({ label, value }) => (
-              <div
-                key={label}
-                className="bg-cinema-gray/60 rounded-lg p-2 border border-white/5"
-              >
-                <p className="text-cinema-accent font-bold text-lg leading-tight">
-                  {value}
-                </p>
-                <p className="text-cinema-light/40 text-xs mt-0.5">{label}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Soft sign-in prompt for guests */}
-          {!isLoggedIn && onOpenAuth && (
-            <div className="bg-cinema-accent/10 border border-cinema-accent/20 rounded-xl p-3 flex items-center justify-between gap-2">
-              <div className="text-left">
-                <p className="text-xs font-semibold text-cinema-accent">Save your streak across devices</p>
-                <p className="text-[11px] text-cinema-light/50">Create a free account or sign in</p>
-              </div>
-              <button
-                onClick={onOpenAuth}
-                className="px-3 py-1.5 bg-cinema-accent hover:bg-cinema-accent-dark text-cinema-darker font-bold rounded-lg text-xs transition-colors shrink-0"
-              >
-                Sign In
-              </button>
+        {/* Mini stats row */}
+        <div className="grid grid-cols-4 gap-2 text-center font-mono">
+          {[
+            { label: 'Played', value: stats.gamesPlayed },
+            { label: 'Win %', value: `${winPct}%` },
+            { label: 'Streak', value: stats.currentStreak },
+            { label: 'Best', value: stats.maxStreak },
+          ].map(({ label, value }) => (
+            <div
+              key={label}
+              className="bg-surface-raised rounded-tile p-2.5 border border-border"
+            >
+              <p className="text-text-primary font-semibold text-base leading-tight tabular-nums">
+                {value}
+              </p>
+              <p className="text-text-tertiary text-[10px] uppercase tracking-wider mt-1">{label}</p>
             </div>
-          )}
+          ))}
+        </div>
 
-          {/* Divider */}
-          <hr className="border-white/10" />
-
-          {/* Share + Countdown */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <CountdownTimer />
-            <ShareButton
-              puzzleNumber={puzzleNumber}
-              guessRecords={guessRecords}
-              maxGuesses={maxGuesses}
-              status={status}
-            />
+        {/* Soft sign-in prompt for guests */}
+        {!isLoggedIn && onOpenAuth && (
+          <div className="bg-surface-raised border border-border rounded-tile p-3.5 flex items-center justify-between gap-3 text-left">
+            <div>
+              <p className="text-xs font-medium text-text-primary">Save streak across devices</p>
+              <p className="text-[11px] text-text-tertiary mt-0.5">Optional free cloud sync</p>
+            </div>
+            <button
+              onClick={onOpenAuth}
+              className="btn-secondary text-xs px-3.5 py-1.5 shrink-0"
+            >
+              Sign In
+            </button>
           </div>
+        )}
+
+        {/* Divider */}
+        <hr className="border-border" />
+
+        {/* Share + Countdown */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <CountdownTimer />
+          <ShareButton
+            puzzleNumber={puzzleNumber}
+            guessRecords={guessRecords}
+            maxGuesses={maxGuesses}
+            status={status}
+          />
         </div>
       </div>
     </div>
