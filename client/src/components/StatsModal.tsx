@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { GameStats } from '../types';
 
 interface StatsModalProps {
@@ -8,6 +8,7 @@ interface StatsModalProps {
 
 export function StatsModal({ stats, onClose }: StatsModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState<'daily' | 'overall'>('daily');
 
   useEffect(() => {
     dialogRef.current?.focus();
@@ -62,9 +63,35 @@ export function StatsModal({ stats, onClose }: StatsModalProps) {
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-          <h2 className="text-lg font-bold uppercase tracking-widest text-cinema-light">
-            Statistics
-          </h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-bold uppercase tracking-widest text-cinema-light">
+              Statistics
+            </h2>
+            {/* Tabs */}
+            <div className="flex bg-cinema-gray/40 rounded-lg p-0.5 border border-white/5 text-xs">
+              <button
+                onClick={() => setActiveTab('daily')}
+                className={`px-2.5 py-1 rounded-md transition-all ${
+                  activeTab === 'daily'
+                    ? 'bg-cinema-accent text-cinema-darker font-bold'
+                    : 'text-cinema-light/60 hover:text-cinema-light'
+                }`}
+              >
+                Daily
+              </button>
+              <button
+                onClick={() => setActiveTab('overall')}
+                className={`px-2.5 py-1 rounded-md transition-all ${
+                  activeTab === 'overall'
+                    ? 'bg-cinema-accent text-cinema-darker font-bold'
+                    : 'text-cinema-light/60 hover:text-cinema-light'
+                }`}
+              >
+                Overall
+              </button>
+            </div>
+          </div>
+
           <button
             onClick={onClose}
             className="
@@ -81,63 +108,94 @@ export function StatsModal({ stats, onClose }: StatsModalProps) {
         </div>
 
         <div className="p-6 flex flex-col gap-6">
-          {/* Stat boxes */}
-          <div className="grid grid-cols-4 gap-2 text-center">
-            {statBoxes.map(({ label, value }) => (
-              <div
-                key={label}
-                className="bg-cinema-gray/60 rounded-xl p-3 border border-white/5 flex flex-col items-center"
-              >
-                <p className="text-cinema-accent font-bold text-2xl leading-tight tabular-nums">
-                  {value}
-                </p>
-                <p className="text-cinema-light/40 text-[10px] mt-1 leading-tight text-center">
-                  {label}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Guess distribution */}
-          <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-cinema-light/40 mb-3">
-              Guess Distribution
-            </h3>
-            <div className="flex flex-col gap-2">
-              {stats.guessDistribution.map((count, idx) => {
-                const pct = maxDist > 0 ? Math.round((count / maxDist) * 100) : 0;
-                const isMax = count === maxDist && count > 0;
-
-                return (
-                  <div key={idx} className="flex items-center gap-2">
-                    <span className="text-cinema-light/50 text-sm w-4 text-right font-medium tabular-nums">
-                      {idx + 1}
-                    </span>
-                    <div className="flex-1 h-7 bg-cinema-gray/40 rounded-md overflow-hidden">
-                      <div
-                        className={`
-                          h-full flex items-center px-2 rounded-md transition-all duration-700
-                          ${isMax ? 'bg-cinema-accent' : 'bg-cinema-gray'}
-                        `}
-                        style={{ width: `${Math.max(pct, count > 0 ? 8 : 0)}%` }}
-                      >
-                        {count > 0 && (
-                          <span
-                            className={`
-                              text-xs font-bold ml-auto
-                              ${isMax ? 'text-cinema-darker' : 'text-cinema-light/70'}
-                            `}
-                          >
-                            {count}
-                          </span>
-                        )}
-                      </div>
-                    </div>
+          {activeTab === 'daily' ? (
+            <>
+              {/* Stat boxes */}
+              <div className="grid grid-cols-4 gap-2 text-center">
+                {statBoxes.map(({ label, value }) => (
+                  <div
+                    key={label}
+                    className="bg-cinema-gray/60 rounded-xl p-3 border border-white/5 flex flex-col items-center"
+                  >
+                    <p className="text-cinema-accent font-bold text-2xl leading-tight tabular-nums">
+                      {value}
+                    </p>
+                    <p className="text-cinema-light/40 text-[10px] mt-1 leading-tight text-center">
+                      {label}
+                    </p>
                   </div>
-                );
-              })}
+                ))}
+              </div>
+
+              {/* Guess distribution */}
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-cinema-light/40 mb-3">
+                  Guess Distribution
+                </h3>
+                <div className="flex flex-col gap-2">
+                  {stats.guessDistribution.map((count, idx) => {
+                    const pct = maxDist > 0 ? Math.round((count / maxDist) * 100) : 0;
+                    const isMax = count === maxDist && count > 0;
+
+                    return (
+                      <div key={idx} className="flex items-center gap-2">
+                        <span className="text-cinema-light/50 text-sm w-4 text-right font-medium tabular-nums">
+                          {idx + 1}
+                        </span>
+                        <div className="flex-1 h-7 bg-cinema-gray/40 rounded-md overflow-hidden">
+                          <div
+                            className={`
+                              h-full flex items-center px-2 rounded-md transition-all duration-700
+                              ${isMax ? 'bg-cinema-accent' : 'bg-cinema-gray'}
+                            `}
+                            style={{ width: `${Math.max(pct, count > 0 ? 8 : 0)}%` }}
+                          >
+                            {count > 0 && (
+                              <span
+                                className={`
+                                  text-xs font-bold ml-auto
+                                  ${isMax ? 'text-cinema-darker' : 'text-cinema-light/70'}
+                                `}
+                              >
+                                {count}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <div className="bg-cinema-gray/40 rounded-xl p-4 border border-white/5 flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-cinema-light/70">Total Games Played</span>
+                  <span className="text-lg font-bold text-cinema-light tabular-nums">{stats.gamesPlayed}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-cinema-light/70">Daily Games</span>
+                  <span className="text-lg font-bold text-cinema-accent tabular-nums">
+                    {stats.dailyGames !== undefined ? stats.dailyGames : stats.gamesPlayed}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-cinema-light/70">Archive Games</span>
+                  <span className="text-lg font-bold text-cinema-light/90 tabular-nums">
+                    {stats.archiveGames !== undefined ? stats.archiveGames : 0}
+                  </span>
+                </div>
+                <div className="border-t border-white/5 pt-2 flex items-center justify-between">
+                  <span className="text-sm text-cinema-light/70">Avg Guesses per Win</span>
+                  <span className="text-lg font-bold text-cinema-accent tabular-nums">
+                    {stats.averageGuessesPerWin !== undefined ? stats.averageGuessesPerWin : '-'}
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

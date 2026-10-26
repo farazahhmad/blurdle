@@ -11,6 +11,8 @@ interface ResultModalProps {
   puzzleNumber: number;
   stats: GameStats;
   onClose: () => void;
+  onOpenAuth?: () => void;
+  isLoggedIn?: boolean;
 }
 
 export function ResultModal({
@@ -21,6 +23,8 @@ export function ResultModal({
   puzzleNumber,
   stats,
   onClose,
+  onOpenAuth,
+  isLoggedIn,
 }: ResultModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -180,6 +184,22 @@ export function ResultModal({
               </div>
             ))}
           </div>
+
+          {/* Soft sign-in prompt for guests */}
+          {!isLoggedIn && onOpenAuth && (
+            <div className="bg-cinema-accent/10 border border-cinema-accent/20 rounded-xl p-3 flex items-center justify-between gap-2">
+              <div className="text-left">
+                <p className="text-xs font-semibold text-cinema-accent">Save your streak across devices</p>
+                <p className="text-[11px] text-cinema-light/50">Create a free account or sign in</p>
+              </div>
+              <button
+                onClick={onOpenAuth}
+                className="px-3 py-1.5 bg-cinema-accent hover:bg-cinema-accent-dark text-cinema-darker font-bold rounded-lg text-xs transition-colors shrink-0"
+              >
+                Sign In
+              </button>
+            </div>
+          )}
 
           {/* Divider */}
           <hr className="border-white/10" />

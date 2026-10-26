@@ -7,8 +7,16 @@ import {
   submitGuess,
   submitSkip,
   fetchResult,
+  fetchArchivePuzzleState,
+  fetchArchiveFrame,
+  submitArchiveGuess,
+  submitArchiveSkip,
 } from '../api/client';
 import { useStats } from './useStats';
+
+interface UseGameOptions {
+  puzzleNumber?: number;
+}
 
 interface UseGameReturn {
   gameState: GameState | null;
@@ -27,7 +35,7 @@ interface UseGameReturn {
   stats: ReturnType<typeof useStats>['stats'];
 }
 
-export function useGame(): UseGameReturn {
+export function useGame({ puzzleNumber }: UseGameOptions = {}): UseGameReturn {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,17 +55,24 @@ export function useGame(): UseGameReturn {
 
   const { stats, updateStats } = useStats();
 
+  const isArchive = typeof puzzleNumber === 'number';
+
   // ── Load initial game state ───────────────────────────────────────────
   useEffect(() => {
     let mounted = true;
     setLoading(true);
-    fetchGameState()
+
+    const loadPromise = isArchive
+      ? fetchArchivePuzzleState(puzzleNumber!)
+      : fetchGameState();
+
+    loadPromise
       .then((state) => {
         if (!mounted) return;
         setGameState(state);
         setError(null);
         // If game already finished, fetch reveal
-        if (state.status !== 'playing') {
+        if (state.status !== 'playing' && !isArchive) {
           return fetchResult().then((rd) => {
             if (mounted) setRevealData(rd);
           });
@@ -72,14 +87,19 @@ export function useGame(): UseGameReturn {
         if (mounted) setLoading(false);
       });
     return () => { mounted = false; };
-  }, []);
+  }, [puzzleNumber, isArchive]);
 
   // ── Fetch frame whenever currentLevel changes ─────────────────────────
   useEffect(() => {
     if (gameState === null) return;
     let mounted = true;
     setFrameLoading(true);
-    fetchFrame(gameState.currentLevel)
+
+    const framePromise = isArchive
+      ? fetchArchiveFrame(gameState.puzzleNumber, gameState.currentLevel)
+      : fetchFrame(gameState.currentLevel);
+
+    framePromise
       .then((url) => {
         if (!mounted) return;
         // Revoke old blob URL
@@ -96,7 +116,7 @@ export function useGame(): UseGameReturn {
         if (mounted) setFrameLoading(false);
       });
     return () => { mounted = false; };
-  }, [gameState?.currentLevel]);
+  }, [gameState?.currentLevel, gameState?.puzzleNumber, isArchive]);
 
   // ── Debounced search ──────────────────────────────────────────────────
   useEffect(() => {
@@ -120,7 +140,9 @@ export function useGame(): UseGameReturn {
     async (movie: MovieSearchResult) => {
       if (!gameState || gameState.status !== 'playing') return;
       try {
-        const result = await submitGuess(movie.tmdbId);
+        const result = isArchive
+          ? await submitArchiveGuess(gameState.puzzleNumber, movie.tmdbId)
+          : await submitGuess(movie.tmdbId);
 
         const record: GuessRecord = {
           tmdbId: movie.tmdbId,
@@ -149,7 +171,7 @@ export function useGame(): UseGameReturn {
           updateStats(result.status, result.guessesUsed, gameState.puzzleNumber);
           if (result.reveal) {
             setRevealData(result.reveal);
-          } else {
+          } else if (!isArchive) {
             fetchResult()
               .then((rd) => setRevealData(rd))
               .catch(() => null);
@@ -159,14 +181,16 @@ export function useGame(): UseGameReturn {
         setError(err instanceof Error ? err.message : 'Failed to submit guess');
       }
     },
-    [gameState, updateStats]
+    [gameState, updateStats, isArchive]
   );
 
   // ── Skip ──────────────────────────────────────────────────────────────
   const skip = useCallback(async () => {
     if (!gameState || gameState.status !== 'playing') return;
     try {
-      const result = await submitSkip();
+      const result = isArchive
+        ? await submitArchiveSkip(gameState.puzzleNumber)
+        : await submitSkip();
 
       const record: GuessRecord = {
         tmdbId: -1,
@@ -195,7 +219,7 @@ export function useGame(): UseGameReturn {
         updateStats(result.status, result.guessesUsed, gameState.puzzleNumber);
         if (result.reveal) {
           setRevealData(result.reveal);
-        } else {
+        } else if (!isArchive) {
           fetchResult()
             .then((rd) => setRevealData(rd))
             .catch(() => null);
@@ -204,7 +228,7 @@ export function useGame(): UseGameReturn {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to skip');
     }
-  }, [gameState, updateStats]);
+  }, [gameState, updateStats, isArchive]);
 
   return {
     gameState,

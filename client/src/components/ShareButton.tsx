@@ -29,14 +29,14 @@ export function ShareButton({
       return '🟥';
     });
 
-    return `PIXEL FRAME #${puzzleNumber} ${score}\n${emojis.join('')}\nhttps://pixelframe.gg`;
+    return `Blurdle #${puzzleNumber} ${score}\n${emojis.join('')}\nhttps://blurdle.gg`;
   }, [puzzleNumber, guessRecords, maxGuesses, status]);
 
   const handleShare = async () => {
     const text = generateShareText();
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'PIXEL FRAME', text });
+        await navigator.share({ title: 'Blurdle', text });
       } else {
         await navigator.clipboard.writeText(text);
         setCopied(true);

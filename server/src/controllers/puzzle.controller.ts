@@ -6,6 +6,7 @@ import * as imageService from '../services/image.service';
 import { Movie } from '../models/Movie';
 import { Game } from '../models/Game';
 import { DailyPuzzle } from '../models/DailyPuzzle';
+import { Types } from 'mongoose';
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w780';
 const MAX_GUESSES = 6;
@@ -28,8 +29,9 @@ export async function getToday(
 ): Promise<void> {
   try {
     const clientId = req.clientId;
+    const userId = req.user?.userId;
     const puzzle = await puzzleService.getOrCreateTodayPuzzle();
-    const gameState = await puzzleService.getPuzzleForClient(clientId, puzzle);
+    const gameState = await puzzleService.getPuzzleForClient(clientId, puzzle, userId);
     res.json(gameState);
   } catch (err) {
     next(err);
@@ -54,8 +56,9 @@ export async function getFrame(
     const { level } = parsed.data;
 
     const clientId = req.clientId;
+    const userId = req.user?.userId;
     const puzzle = await puzzleService.getOrCreateTodayPuzzle();
-    const gameState = await puzzleService.getPuzzleForClient(clientId, puzzle);
+    const gameState = await puzzleService.getPuzzleForClient(clientId, puzzle, userId);
 
     // Prevent clients from accessing frames beyond their current level
     if (level > gameState.currentLevel && gameState.status === 'playing') {
@@ -96,8 +99,9 @@ export async function getResult(
 ): Promise<void> {
   try {
     const clientId = req.clientId;
+    const userId = req.user?.userId;
     const puzzle = await puzzleService.getOrCreateTodayPuzzle();
-    const gameState = await puzzleService.getPuzzleForClient(clientId, puzzle);
+    const gameState = await puzzleService.getPuzzleForClient(clientId, puzzle, userId);
 
     if (gameState.status === 'playing') {
       throw new AppError('Game is still in progress.', 403);
@@ -109,10 +113,10 @@ export async function getResult(
     }
 
     // Find the game to get guess count
-    const game = await Game.findOne({
-      clientId,
-      puzzleNumber: puzzle.puzzleNumber,
-    }).lean();
+    const query = userId
+      ? { $or: [{ userId: new Types.ObjectId(userId) }, { clientId }], puzzleNumber: puzzle.puzzleNumber }
+      : { clientId, puzzleNumber: puzzle.puzzleNumber };
+    const game = await Game.findOne(query).lean();
 
     res.json({
       title: movie.title,

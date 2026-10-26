@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { GameStats } from '../types';
+import { fetchServerStats } from '../api/client';
 
 const STATS_KEY = 'pixel-frame-stats';
 const MAX_GUESSES = 6;
@@ -46,10 +47,36 @@ interface UseStatsReturn {
     puzzleNumber: number
   ) => void;
   resetStats: () => void;
+  syncServerStats: () => Promise<void>;
 }
 
-export function useStats(): UseStatsReturn {
+export function useStats(isLoggedIn = false): UseStatsReturn {
   const [stats, setStats] = useState<GameStats>(loadStats);
+
+  const syncServerStats = useCallback(async () => {
+    try {
+      const serverStats = await fetchServerStats();
+      if (serverStats) {
+        setStats((prev) => ({
+          ...prev,
+          ...serverStats,
+          guessDistribution:
+            Array.isArray(serverStats.guessDistribution) &&
+            serverStats.guessDistribution.length === MAX_GUESSES
+              ? serverStats.guessDistribution
+              : prev.guessDistribution,
+        }));
+      }
+    } catch {
+      // Fallback silently to local stats
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      syncServerStats();
+    }
+  }, [isLoggedIn, syncServerStats]);
 
   const updateStats = useCallback(
     (result: 'won' | 'lost', guessesUsed: number, puzzleNumber: number) => {
@@ -66,6 +93,7 @@ export function useStats(): UseStatsReturn {
 
         const currentStreak = won ? prev.currentStreak + 1 : 0;
         const next: GameStats = {
+          ...prev,
           gamesPlayed: prev.gamesPlayed + 1,
           gamesWon: prev.gamesWon + (won ? 1 : 0),
           currentStreak,
@@ -76,8 +104,13 @@ export function useStats(): UseStatsReturn {
         saveStats(next);
         return next;
       });
+
+      if (isLoggedIn) {
+        // Refresh server stats in background
+        syncServerStats();
+      }
     },
-    []
+    [isLoggedIn, syncServerStats]
   );
 
   const resetStats = useCallback(() => {
@@ -86,5 +119,5 @@ export function useStats(): UseStatsReturn {
     setStats(fresh);
   }, []);
 
-  return { stats, updateStats, resetStats };
+  return { stats, updateStats, resetStats, syncServerStats };
 }

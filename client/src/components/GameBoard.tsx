@@ -7,7 +7,21 @@ import { HintPanel } from './HintPanel';
 import { ResultModal } from './ResultModal';
 import { SkipButton } from './SkipButton';
 
-export function GameBoard() {
+interface GameBoardProps {
+  puzzleNumber?: number;
+  onBackToArchive?: () => void;
+  onPlayToday?: () => void;
+  onOpenAuth?: () => void;
+  isLoggedIn?: boolean;
+}
+
+export function GameBoard({
+  puzzleNumber,
+  onBackToArchive,
+  onPlayToday,
+  onOpenAuth,
+  isLoggedIn,
+}: GameBoardProps = {}) {
   const {
     gameState,
     loading,
@@ -23,7 +37,7 @@ export function GameBoard() {
     makeGuess,
     skip,
     stats,
-  } = useGame();
+  } = useGame({ puzzleNumber });
 
   const [showResult, setShowResult] = useState(false);
 
@@ -75,11 +89,31 @@ export function GameBoard() {
 
   return (
     <div className="w-full max-w-xl mx-auto px-4 pb-8 flex flex-col gap-5">
-      {/* Puzzle number */}
-      <div className="text-center">
-        <span className="text-xs text-cinema-light/30 uppercase tracking-widest font-medium">
-          Puzzle #{gameState.puzzleNumber}
+      {/* Puzzle number & Navigation */}
+      <div className="flex items-center justify-between px-1">
+        {onBackToArchive ? (
+          <button
+            onClick={onBackToArchive}
+            className="flex items-center gap-1.5 text-xs text-cinema-accent hover:underline uppercase tracking-wider font-semibold"
+          >
+            ← Back to Archive
+          </button>
+        ) : (
+          <span className="w-10"></span>
+        )}
+        <span className="text-xs text-cinema-light/40 uppercase tracking-widest font-bold">
+          Puzzle #{gameState.puzzleNumber} {puzzleNumber ? '(Archive)' : ''}
         </span>
+        {onPlayToday && puzzleNumber ? (
+          <button
+            onClick={onPlayToday}
+            className="flex items-center gap-1.5 text-xs text-cinema-accent hover:underline uppercase tracking-wider font-semibold"
+          >
+            Play Today →
+          </button>
+        ) : (
+          <span className="w-10"></span>
+        )}
       </div>
 
       {/* Movie Frame */}
@@ -137,6 +171,8 @@ export function GameBoard() {
           puzzleNumber={gameState.puzzleNumber}
           stats={stats}
           onClose={() => setShowResult(false)}
+          onOpenAuth={onOpenAuth}
+          isLoggedIn={isLoggedIn}
         />
       )}
     </div>

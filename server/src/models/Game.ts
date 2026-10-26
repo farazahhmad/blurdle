@@ -7,6 +7,8 @@ export interface IGame extends Document {
   puzzleNumber: number;
   guesses: number[];
   status: GameStatus;
+  userId?: mongoose.Types.ObjectId | null;
+  playedOnDate?: boolean;
   createdAt: Date;
 }
 
@@ -28,6 +30,16 @@ const GameSchema = new Schema<IGame>(
       type: String,
       enum: ['playing', 'won', 'lost'],
       default: 'playing',
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+      index: true,
+    },
+    playedOnDate: {
+      type: Boolean,
+      default: true,
     },
     createdAt: {
       type: Date,

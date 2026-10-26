@@ -39,6 +39,30 @@ export interface GameStats {
   maxStreak: number;
   guessDistribution: number[]; // index 0 = won in 1 guess, ... index 5 = won in 6
   lastPlayedPuzzle?: number;
+  dailyGames?: number;
+  archiveGames?: number;
+  averageGuessesPerWin?: number;
+}
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  displayName: string;
+}
+
+export interface ArchiveListItem {
+  puzzleNumber: number;
+  dateKey: string;
+  status: 'not_played' | 'playing' | 'won' | 'lost';
+  guessesUsed: number;
+}
+
+export interface ArchiveListResponse {
+  items: ArchiveListItem[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }
 
 export interface GuessRecord {

@@ -29,6 +29,7 @@ async function apiFetch<T>(
 ): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
     ...options,
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       'x-client-id': getClientId(),
@@ -37,8 +38,14 @@ async function apiFetch<T>(
   });
 
   if (!res.ok) {
-    const body = await res.text().catch(() => res.statusText);
-    throw new Error(`API error ${res.status}: ${body}`);
+    let msg = res.statusText;
+    try {
+      const data = await res.json();
+      if (data && data.error) msg = data.error;
+    } catch {
+      // fallback to statusText
+    }
+    throw new Error(msg);
   }
 
   return res.json() as Promise<T>;
@@ -88,4 +95,86 @@ export async function submitSkip(): Promise<GuessResult> {
 
 export async function fetchResult(): Promise<RevealData> {
   return apiFetch<RevealData>('/puzzle/today/result');
+}
+
+// ── Archive API ───────────────────────────────────────────────────────────
+
+export async function fetchArchiveList(page = 1, limit = 15): Promise<import('../types').ArchiveListResponse> {
+  return apiFetch<import('../types').ArchiveListResponse>(`/archive?page=${page}&limit=${limit}`);
+}
+
+export async function fetchArchivePuzzleState(puzzleNumber: number): Promise<GameState> {
+  return apiFetch<GameState>(`/archive/${puzzleNumber}`);
+}
+
+export async function fetchArchiveFrame(puzzleNumber: number, level: number): Promise<string> {
+  const res = await fetch(
+    `${BASE_URL}/archive/${puzzleNumber}/frame?level=${level}`,
+    {
+      credentials: 'include',
+      headers: { 'x-client-id': getClientId() },
+    }
+  );
+  if (!res.ok) {
+    throw new Error(`Failed to fetch frame for level ${level}: ${res.status}`);
+  }
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+}
+
+export async function submitArchiveGuess(puzzleNumber: number, tmdbId: number): Promise<GuessResult> {
+  return apiFetch<GuessResult>(`/archive/${puzzleNumber}/guess`, {
+    method: 'POST',
+    body: JSON.stringify({ tmdbId }),
+  });
+}
+
+export async function submitArchiveSkip(puzzleNumber: number): Promise<GuessResult> {
+  return apiFetch<GuessResult>(`/archive/${puzzleNumber}/skip`, {
+    method: 'POST',
+  });
+}
+
+// ── Auth & Stats API ──────────────────────────────────────────────────────
+
+export async function fetchMe(): Promise<{ user: import('../types').UserProfile | null }> {
+  return apiFetch<{ user: import('../types').UserProfile | null }>('/auth/me');
+}
+
+export async function registerUser(email: string, password: string, displayName: string) {
+  return apiFetch<{ user: import('../types').UserProfile }>('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ email, password, displayName }),
+  });
+}
+
+export async function loginUser(email: string, password: string) {
+  return apiFetch<{ user: import('../types').UserProfile }>('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ email, password }),
+  });
+}
+
+export async function googleLogin(credential: string) {
+  return apiFetch<{ user: import('../types').UserProfile }>('/auth/google', {
+    method: 'POST',
+    body: JSON.stringify({ credential }),
+  });
+}
+
+export async function logoutUser() {
+  return apiFetch<{ success: boolean }>('/auth/logout', {
+    method: 'POST',
+  });
+}
+
+export async function mergeGuestAccount() {
+  return apiFetch<{ success: boolean }>('/auth/merge', {
+    method: 'POST',
+    body: JSON.stringify({ clientId: getClientId() }),
+  });
+}
+
+export async function fetchServerStats(): Promise<import('../types').GameStats> {
+  return apiFetch<import('../types').GameStats>('/stats');
 }

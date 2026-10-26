@@ -1,11 +1,16 @@
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { generalLimiter } from './middleware/rateLimiter';
 import { errorHandler } from './middleware/errorHandler';
+import { optionalAuthMiddleware } from './middleware/auth';
 import puzzleRoutes from './routes/puzzle.routes';
 import moviesRoutes from './routes/movies.routes';
 import guessRoutes from './routes/guess.routes';
+import authRoutes from './routes/auth.routes';
+import archiveRoutes from './routes/archive.routes';
+import statsRoutes from './routes/stats.routes';
 
 const app = express();
 
@@ -16,13 +21,18 @@ app.use(helmet());
 app.use(
   cors({
     origin: process.env.CLIENT_ORIGIN ?? 'http://localhost:5173',
+    credentials: true,
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'x-client-id'],
   })
 );
 
-// Body parsing
+// Body and cookie parsing
 app.use(express.json());
+app.use(cookieParser());
+
+// Optional Auth (attaches req.user if JWT cookie is valid, otherwise no-op)
+app.use(optionalAuthMiddleware);
 
 // General rate limiter applied to all /api routes
 app.use('/api', generalLimiter);
@@ -33,6 +43,9 @@ app.get('/health', (_req, res) => {
 });
 
 // Mount routers
+app.use('/api/auth', authRoutes);
+app.use('/api/archive', archiveRoutes);
+app.use('/api/stats', statsRoutes);
 app.use('/api/puzzle', puzzleRoutes);
 app.use('/api/movies', moviesRoutes);
 

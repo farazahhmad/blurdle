@@ -86,28 +86,40 @@ export interface GameState {
  */
 export async function getPuzzleForClient(
   clientId: string,
-  puzzle: IDailyPuzzle
+  puzzle: IDailyPuzzle,
+  userId?: string
 ): Promise<GameState> {
-  // Find or create game document for this client + puzzle
-  let game: IGame | null = await Game.findOne({
-    clientId,
-    puzzleNumber: puzzle.puzzleNumber,
-  });
+  // Find or create game document for this client/user + puzzle
+  const query = userId
+    ? { $or: [{ userId: new Types.ObjectId(userId) }, { clientId }], puzzleNumber: puzzle.puzzleNumber }
+    : { clientId, puzzleNumber: puzzle.puzzleNumber };
+
+  let game: IGame | null = await Game.findOne(query);
 
   if (!game) {
+    const setOnInsertData: any = {
+      clientId,
+      puzzleNumber: puzzle.puzzleNumber,
+      guesses: [],
+      status: 'playing',
+      playedOnDate: puzzle.dateKey === getTodayKey(),
+      createdAt: new Date(),
+    };
+    if (userId) {
+      setOnInsertData.userId = new Types.ObjectId(userId);
+    }
+
     game = await Game.findOneAndUpdate(
       { clientId, puzzleNumber: puzzle.puzzleNumber },
       {
-        $setOnInsert: {
-          clientId,
-          puzzleNumber: puzzle.puzzleNumber,
-          guesses: [],
-          status: 'playing',
-          createdAt: new Date(),
-        },
+        $setOnInsert: setOnInsertData,
       },
       { upsert: true, new: true }
     );
+  } else if (userId && !game.userId) {
+    // If user is logged in, attach their userId to existing game
+    game.userId = new Types.ObjectId(userId);
+    await game.save();
   }
 
   if (!game) {

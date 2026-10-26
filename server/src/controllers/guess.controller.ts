@@ -78,26 +78,36 @@ async function processGuess(
     const puzzle = await puzzleService.getOrCreateTodayPuzzle();
 
     // Load the game document (not lean — we need to save)
-    let game = await Game.findOne({
-      clientId,
-      puzzleNumber: puzzle.puzzleNumber,
-    });
+    const userId = req.user?.userId;
+    const gameQuery = userId
+      ? { $or: [{ userId: new Types.ObjectId(userId) }, { clientId }], puzzleNumber: puzzle.puzzleNumber }
+      : { clientId, puzzleNumber: puzzle.puzzleNumber };
+
+    let game = await Game.findOne(gameQuery);
 
     // Create game if it doesn't exist
     if (!game) {
+      const setOnInsertData: any = {
+        clientId,
+        puzzleNumber: puzzle.puzzleNumber,
+        guesses: [],
+        status: 'playing',
+        playedOnDate: puzzle.dateKey === puzzleService.getTodayKey(),
+        createdAt: new Date(),
+      };
+      if (userId) {
+        setOnInsertData.userId = new Types.ObjectId(userId);
+      }
+
       game = await Game.findOneAndUpdate(
         { clientId, puzzleNumber: puzzle.puzzleNumber },
         {
-          $setOnInsert: {
-            clientId,
-            puzzleNumber: puzzle.puzzleNumber,
-            guesses: [],
-            status: 'playing',
-            createdAt: new Date(),
-          },
+          $setOnInsert: setOnInsertData,
         },
         { upsert: true, new: true }
       );
+    } else if (userId && !game.userId) {
+      game.userId = new Types.ObjectId(userId);
     }
 
     if (!game) {

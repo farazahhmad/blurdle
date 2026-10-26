@@ -20,7 +20,7 @@ export function AboutSection() {
           This product uses the TMDB API but is not endorsed or certified by TMDB.
         </p>
         <p className="text-cinema-light/20 text-xs">
-          PIXEL FRAME — A daily movie guessing game
+          Blurdle — A daily movie guessing game
         </p>
       </div>
     </footer>
