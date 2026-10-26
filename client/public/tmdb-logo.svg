@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 185.09 133.39" width="185" height="133">
+  <defs>
+    <style>.cls-1{fill:#fff;}.cls-2{fill:#01d277;}.cls-3{fill:#01b4e4;}</style>
+  </defs>
+  <rect width="185.09" height="133.39" rx="8" ry="8" fill="#032541"/>
+  <path class="cls-1" d="M17.27,54.59h6.3v9.93h9.68V54.59h6.3V80.5h-6.3V70h-9.68V80.5h-6.3Z"/>
+  <path class="cls-1" d="M50.41,60.17H43.79V54.59H63.34v5.58H56.71V80.5H50.41Z"/>
+  <path class="cls-1" d="M65.45,54.59h6.3V80.5h-6.3Z"/>
+  <path class="cls-1" d="M75.29,54.59h8.26l5.08,8.08,5.07-8.08H102V80.5H95.74V63.89l-7.11,10.76-7.11-10.76V80.5H75.29Z"/>
+  <path class="cls-1" d="M104.8,54.59h16.85v5.41H111.1v3.91h10.55v5.41H111.1V75.09h10.55V80.5H104.8Z"/>
+  <path class="cls-2" d="M133.19,54.59h6.3V75.09h9.68V80.5h-16Z"/>
+  <path class="cls-2" d="M166.92,80.5l-7.57-10.09-7.57,10.09h-7.57l11.35-13.46L144.57,54.59h7.57l7.21,9.51,7.21-9.51h7.57l-11,12.45,11.35,13.46Z"/>
+  <text x="17" y="105" font-family="sans-serif" font-size="10" fill="#fff">Movie Database</text>
+</svg>
