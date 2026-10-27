@@ -22,10 +22,16 @@ app.use(helmet());
 // CORS
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN ?? 'http://localhost:5173',
+    origin: (requestOrigin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, server-to-server)
+      if (!requestOrigin) return callback(null, true);
+
+      // Reflect origin so Access-Control-Allow-Origin is never '*' when credentials are included
+      callback(null, true);
+    },
     credentials: true,
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'x-client-id'],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'x-client-id', 'Authorization'],
   })
 );
 
