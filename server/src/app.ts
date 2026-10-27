@@ -16,6 +16,9 @@ import practiceRoutes from './practice/routes/practice.routes';
 
 const app = express();
 
+// Trust reverse proxy (Render, Vercel, Cloudflare) for rate-limiting by true client IP
+app.set('trust proxy', 1);
+
 // Security headers
 app.use(helmet());
 

@@ -10,7 +10,6 @@ import { authLimiter } from '../middleware/rateLimiter';
 import { AppError } from '../middleware/errorHandler';
 
 const router = Router();
-router.use(authLimiter);
 
 const registerSchema = z.object({
   email: z.string().email(),
@@ -56,7 +55,7 @@ function setAuthCookie(res: Response, user: IUser): void {
 /**
  * POST /api/auth/register
  */
-router.post('/register', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/register', authLimiter, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const parsed = registerSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -94,7 +93,7 @@ router.post('/register', async (req: Request, res: Response, next: NextFunction)
 /**
  * POST /api/auth/login
  */
-router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/login', authLimiter, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const parsed = loginSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -128,7 +127,7 @@ router.post('/login', async (req: Request, res: Response, next: NextFunction) =>
 /**
  * POST /api/auth/google
  */
-router.post('/google', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/google', authLimiter, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const googleClientId = process.env.GOOGLE_CLIENT_ID;
     if (!googleClientId) {
